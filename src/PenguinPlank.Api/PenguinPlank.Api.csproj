@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!--
+    Shared build settings come from the root Directory.Build.props. Api is the
+    composition root: it references Application + Contracts + Infrastructure and
+    nothing in those projects references back (dependency rule: coding-standards §3).
+  -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <!--
+      The composition root registers the EF Core DbContext (AddDbContext / UseSqlServer),
+      so it references the SqlServer provider directly. Pinned to the same EF Core 10
+      servicing patch Infrastructure compiles against so the primary reference unifies
+      (the ASP.NET Core shared framework otherwise pulls an older EF Core version,
+      producing an MSB3277/CS1705 assembly-version conflict).
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PenguinPlank.Application\PenguinPlank.Application.csproj" />
+    <ProjectReference Include="..\PenguinPlank.Contracts\PenguinPlank.Contracts.csproj" />
+    <ProjectReference Include="..\PenguinPlank.Infrastructure\PenguinPlank.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TFM, nullable, analyzers, and warnings-as-errors come from the root
+    Directory.Build.props; GenerateDocumentationFile stays enabled there so the
+    IDE0005 (unused-using) analyzer runs on build.
+
+    BrowserTests holds the Playwright core-workflow smoke tests for the Blazor
+    client (coding-standards §7). The project file name is BrowserTests.csproj,
+    which the CI pipeline discovers by name.
+
+    CA1707 is suppressed for the test assembly: the mandated test naming
+    convention is Method_Scenario_ExpectedBehavior (coding-standards §4), which
+    intentionally uses underscores.
+  -->
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PenguinPlank.Web\PenguinPlank.Web.csproj" />
+    <ProjectReference Include="..\..\src\PenguinPlank.Contracts\PenguinPlank.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

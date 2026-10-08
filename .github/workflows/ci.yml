@@ -1,0 +1,213 @@
+name: CI
+
+# Enforces the Phase A A1 build/CI gates (requirements 4.6, 4.7):
+#   restore -> format verification -> build with warnings-as-errors ->
+#   UnitTests + IntegrationTests (real SQL Server) + BrowserTests (Playwright).
+# See .kiro/specs/penguin-plank-phase-a for the authoritative plan.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: "10.0.x"
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+  SOLUTION: PenguinPlank.sln
+  BUILD_CONFIGURATION: Release
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Gate 1: formatting + build with warnings/analyzers as errors.
+  # Fast feedback; does not touch a database.
+  # ---------------------------------------------------------------------------
+  build-and-format:
+    name: Build & format gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      # Requirement 4.6: formatting is verified, not reformatted, in CI.
+      - name: Verify formatting (dotnet format --verify-no-changes)
+        run: dotnet format ${{ env.SOLUTION }} --verify-no-changes --no-restore
+
+      # Requirement 4.6: compiler + analyzer warnings are treated as errors for
+      # authored projects. TreatWarningsAsErrors is set in Directory.Build.props;
+      # the explicit switch below guards against a local override.
+      - name: Build (warnings as errors)
+        run: >
+          dotnet build ${{ env.SOLUTION }}
+          --configuration ${{ env.BUILD_CONFIGURATION }}
+          --no-restore
+          -warnaserror
+
+  # ---------------------------------------------------------------------------
+  # Gate 2: unit tests. Deterministic, no external dependencies.
+  # ---------------------------------------------------------------------------
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    needs: build-and-format
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      # Locate the project by name so the step is independent of the chosen
+      # folder layout (root vs. a tests/ subfolder) produced by task 1.1.
+      - name: Run UnitTests
+        shell: pwsh
+        run: |
+          $proj = Get-ChildItem -Recurse -Filter 'UnitTests.csproj' | Select-Object -First 1
+          if (-not $proj) { throw 'UnitTests.csproj not found.' }
+          dotnet test $proj.FullName `
+            --configuration ${{ env.BUILD_CONFIGURATION }} `
+            --no-restore `
+            --logger "trx;LogFileName=unit-tests.trx" `
+            --results-directory ${{ github.workspace }}/test-results/unit
+
+      - name: Upload unit test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: ${{ github.workspace }}/test-results/unit
+          if-no-files-found: ignore
+
+  # ---------------------------------------------------------------------------
+  # Gate 3: integration tests against a REAL SQL Server (coding-standards §7:
+  # EF InMemory is not evidence of relational correctness). Uses the official
+  # SQL Server 2022 image as a service container; migrations are applied by the
+  # tests. Switch to the 2025 image once it is published if parity is required.
+  # ---------------------------------------------------------------------------
+  integration-tests:
+    name: Integration tests (SQL Server)
+    runs-on: ubuntu-latest
+    needs: build-and-format
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "Your_Strong!Passw0rd"
+          MSSQL_PID: Developer
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'Your_Strong!Passw0rd' -Q 'SELECT 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 20
+          --health-start-period 30s
+    env:
+      # Consumed by IntegrationTests to build an isolated test database per run.
+      ConnectionStrings__SqlServer: "Server=localhost,1433;Database=PenguinPlank_CI;User Id=sa;Password=Your_Strong!Passw0rd;TrustServerCertificate=True;Encrypt=True"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      - name: Run IntegrationTests
+        shell: pwsh
+        run: |
+          $proj = Get-ChildItem -Recurse -Filter 'IntegrationTests.csproj' | Select-Object -First 1
+          if (-not $proj) { throw 'IntegrationTests.csproj not found.' }
+          dotnet test $proj.FullName `
+            --configuration ${{ env.BUILD_CONFIGURATION }} `
+            --no-restore `
+            --logger "trx;LogFileName=integration-tests.trx" `
+            --results-directory ${{ github.workspace }}/test-results/integration
+
+      - name: Upload integration test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: ${{ github.workspace }}/test-results/integration
+          if-no-files-found: ignore
+
+  # ---------------------------------------------------------------------------
+  # Gate 4: browser end-to-end tests (Playwright). The Playwright browsers are
+  # installed via the generated bootstrap script produced by a prior build.
+  # ---------------------------------------------------------------------------
+  browser-tests:
+    name: Browser tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: build-and-format
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore ${{ env.SOLUTION }}
+
+      # Build BrowserTests first so the Playwright install script is emitted,
+      # then install browsers and run. Project path is discovered by name.
+      - name: Build and run BrowserTests
+        shell: pwsh
+        run: |
+          $proj = Get-ChildItem -Recurse -Filter 'BrowserTests.csproj' | Select-Object -First 1
+          if (-not $proj) { throw 'BrowserTests.csproj not found.' }
+
+          dotnet build $proj.FullName `
+            --configuration ${{ env.BUILD_CONFIGURATION }} `
+            --no-restore
+
+          $script = Get-ChildItem -Path $proj.Directory -Recurse -Filter 'playwright.ps1' |
+            Where-Object { $_.FullName -match '[\\/]bin[\\/]' } |
+            Select-Object -First 1
+          if (-not $script) { throw 'playwright.ps1 not found after build.' }
+          & $script.FullName install --with-deps
+
+          dotnet test $proj.FullName `
+            --configuration ${{ env.BUILD_CONFIGURATION }} `
+            --no-build `
+            --logger "trx;LogFileName=browser-tests.trx" `
+            --results-directory ${{ github.workspace }}/test-results/browser
+
+      - name: Upload browser test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-test-results
+          path: ${{ github.workspace }}/test-results/browser
+          if-no-files-found: ignore

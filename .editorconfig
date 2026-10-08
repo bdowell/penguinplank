@@ -1,0 +1,229 @@
+# Penguin Plank — root EditorConfig
+#
+# Central style and naming enforcement for the whole solution. Encodes the
+# formatting rules from coding-standards §8 and the naming rules from §4.
+# Naming and style violations are reported as warnings; Directory.Build.props
+# sets TreatWarningsAsErrors so they fail an authored build in CI.
+
+root = true
+
+# ---------------------------------------------------------------------------
+# All files
+# ---------------------------------------------------------------------------
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{json,yml,yaml}]
+indent_size = 2
+
+[*.{csproj,props,targets,config}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+# ===========================================================================
+# C# — formatting, style, and naming
+# ===========================================================================
+[*.cs]
+
+# --- Indentation and spacing (coding-standards §8) -------------------------
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+# --- Namespaces: file-scoped (coding-standards §8) -------------------------
+csharp_style_namespace_declarations = file_scoped:warning
+
+# --- Braces: Allman, and required on all control statements (§8) -----------
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
+csharp_prefer_braces = true:warning
+
+# --- using directives: sorted, System first, no unused (§8) ----------------
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+csharp_using_directive_placement = outside_namespace:warning
+# IDE0005: remove unnecessary using directives.
+dotnet_diagnostic.IDE0005.severity = warning
+
+# --- var usage: use when the type is apparent (§5) -------------------------
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = false:suggestion
+
+# --- Expression / modern C# preferences ------------------------------------
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_style_prefer_primary_constructors = false:suggestion
+csharp_style_expression_bodied_methods = false:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
+dotnet_style_readonly_field = true:warning
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# --- Nullable: do not silence with the null-forgiving operator by default --
+dotnet_diagnostic.CS8600.severity = warning
+dotnet_diagnostic.CS8602.severity = warning
+dotnet_diagnostic.CS8603.severity = warning
+dotnet_diagnostic.CS8625.severity = warning
+
+# ===========================================================================
+# Naming rules (coding-standards §4)
+# ===========================================================================
+# Each rule needs a symbol group (dotnet_naming_symbols.*), a style
+# (dotnet_naming_style.*), and a rule binding them (dotnet_naming_rule.*).
+
+# --- Styles ----------------------------------------------------------------
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.camel_case.capitalization = camel_case
+
+dotnet_naming_style.i_prefixed_pascal.capitalization = pascal_case
+dotnet_naming_style.i_prefixed_pascal.required_prefix = I
+
+dotnet_naming_style.t_prefixed_pascal.capitalization = pascal_case
+dotnet_naming_style.t_prefixed_pascal.required_prefix = T
+
+dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+dotnet_naming_style.underscore_camel_case.required_prefix = _
+
+dotnet_naming_style.s_underscore_camel_case.capitalization = camel_case
+dotnet_naming_style.s_underscore_camel_case.required_prefix = s_
+
+dotnet_naming_style.async_pascal.capitalization = pascal_case
+dotnet_naming_style.async_pascal.required_suffix = Async
+
+# --- Symbol groups ---------------------------------------------------------
+dotnet_naming_symbols.namespaces.applicable_kinds = namespace
+
+dotnet_naming_symbols.types.applicable_kinds = class, struct, enum, delegate
+dotnet_naming_symbols.types.applicable_accessibilities = *
+
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_symbols.interfaces.applicable_accessibilities = *
+
+dotnet_naming_symbols.type_parameters.applicable_kinds = type_parameter
+
+dotnet_naming_symbols.methods.applicable_kinds = method, local_function
+dotnet_naming_symbols.methods.applicable_accessibilities = *
+
+dotnet_naming_symbols.async_methods.applicable_kinds = method, local_function
+dotnet_naming_symbols.async_methods.applicable_accessibilities = *
+dotnet_naming_symbols.async_methods.required_modifiers = async
+
+dotnet_naming_symbols.properties.applicable_kinds = property
+dotnet_naming_symbols.properties.applicable_accessibilities = *
+
+dotnet_naming_symbols.events.applicable_kinds = event
+dotnet_naming_symbols.events.applicable_accessibilities = *
+
+dotnet_naming_symbols.enum_members.applicable_kinds = enum, field
+dotnet_naming_symbols.enum_members.applicable_accessibilities = *
+
+dotnet_naming_symbols.constants.applicable_kinds = field
+dotnet_naming_symbols.constants.applicable_accessibilities = *
+dotnet_naming_symbols.constants.required_modifiers = const
+
+dotnet_naming_symbols.public_fields.applicable_kinds = field
+dotnet_naming_symbols.public_fields.applicable_accessibilities = public, internal, protected, protected_internal
+
+dotnet_naming_symbols.private_static_fields.applicable_kinds = field
+dotnet_naming_symbols.private_static_fields.applicable_accessibilities = private, private_protected
+dotnet_naming_symbols.private_static_fields.required_modifiers = static
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private, private_protected
+
+dotnet_naming_symbols.parameters_locals.applicable_kinds = parameter, local
+
+# --- Rules (ordered: most specific first) ----------------------------------
+# Interfaces: I + PascalCase.
+dotnet_naming_rule.interfaces_i_prefixed.symbols = interfaces
+dotnet_naming_rule.interfaces_i_prefixed.style = i_prefixed_pascal
+dotnet_naming_rule.interfaces_i_prefixed.severity = warning
+
+# Type parameters: T or T-prefixed PascalCase.
+dotnet_naming_rule.type_parameters_t_prefixed.symbols = type_parameters
+dotnet_naming_rule.type_parameters_t_prefixed.style = t_prefixed_pascal
+dotnet_naming_rule.type_parameters_t_prefixed.severity = warning
+
+# Async methods: PascalCase with Async suffix (checked before general methods).
+dotnet_naming_rule.async_methods_suffixed.symbols = async_methods
+dotnet_naming_rule.async_methods_suffixed.style = async_pascal
+dotnet_naming_rule.async_methods_suffixed.severity = warning
+
+# Namespaces, types, methods, properties, events, enums, constants: PascalCase.
+dotnet_naming_rule.namespaces_pascal.symbols = namespaces
+dotnet_naming_rule.namespaces_pascal.style = pascal_case
+dotnet_naming_rule.namespaces_pascal.severity = warning
+
+dotnet_naming_rule.types_pascal.symbols = types
+dotnet_naming_rule.types_pascal.style = pascal_case
+dotnet_naming_rule.types_pascal.severity = warning
+
+dotnet_naming_rule.methods_pascal.symbols = methods
+dotnet_naming_rule.methods_pascal.style = pascal_case
+dotnet_naming_rule.methods_pascal.severity = warning
+
+dotnet_naming_rule.properties_pascal.symbols = properties
+dotnet_naming_rule.properties_pascal.style = pascal_case
+dotnet_naming_rule.properties_pascal.severity = warning
+
+dotnet_naming_rule.events_pascal.symbols = events
+dotnet_naming_rule.events_pascal.style = pascal_case
+dotnet_naming_rule.events_pascal.severity = warning
+
+dotnet_naming_rule.enum_members_pascal.symbols = enum_members
+dotnet_naming_rule.enum_members_pascal.style = pascal_case
+dotnet_naming_rule.enum_members_pascal.severity = warning
+
+dotnet_naming_rule.constants_pascal.symbols = constants
+dotnet_naming_rule.constants_pascal.style = pascal_case
+dotnet_naming_rule.constants_pascal.severity = warning
+
+# Public/internal/protected fields: PascalCase.
+dotnet_naming_rule.public_fields_pascal.symbols = public_fields
+dotnet_naming_rule.public_fields_pascal.style = pascal_case
+dotnet_naming_rule.public_fields_pascal.severity = warning
+
+# Private static fields: s_camelCase (checked before private instance fields).
+dotnet_naming_rule.private_static_fields_s_underscore.symbols = private_static_fields
+dotnet_naming_rule.private_static_fields_s_underscore.style = s_underscore_camel_case
+dotnet_naming_rule.private_static_fields_s_underscore.severity = warning
+
+# Private instance fields: _camelCase.
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_camel_case
+dotnet_naming_rule.private_fields_underscore.severity = warning
+
+# Parameters and locals: camelCase.
+dotnet_naming_rule.parameters_locals_camel.symbols = parameters_locals
+dotnet_naming_rule.parameters_locals_camel.style = camel_case
+dotnet_naming_rule.parameters_locals_camel.severity = warning
+
+# ===========================================================================
+# Generated code — scope exclusions correctly (coding-standards §8)
+# ===========================================================================
+# EF Core migrations are generated; they must not fail the authored
+# warnings-as-errors gate. Marking the folder as generated_code suppresses
+# analyzer and style diagnostics there without weakening the solution-wide
+# analysis settings.
+[**/Migrations/*.cs]
+generated_code = true
+
+[*.{Designer.cs,designer.cs,generated.cs,g.cs,g.i.cs}]
+generated_code = true

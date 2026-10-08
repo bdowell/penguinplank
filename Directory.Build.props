@@ -1,0 +1,76 @@
+<Project>
+
+  <!--
+    Central build configuration for Penguin Plank.
+
+    Applies to every project in the solution unless a project overrides a
+    property locally. It encodes the coding-standards requirements:
+      - nullable reference types enabled (coding-standards §5)
+      - .NET analyzers at the latest level (coding-standards §8)
+      - compiler + analyzer warnings treated as errors for authored projects (§8)
+      - stable (non-preview) C# language version (§8)
+
+    Generated code (for example EF Core migrations or source-generated files)
+    is excluded from the warnings-as-errors gate through the root .editorconfig
+    (generated_code = true) rather than by relaxing any property here. See the
+    note below the PropertyGroup for how generated code is recognized.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Stable (non-preview) C# version that pairs with .NET 10 LTS. -->
+    <LangVersion>14.0</LangVersion>
+
+    <!-- Nullability and implicit usings (coding-standards §5). -->
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- Analyzer configuration (coding-standards §8). -->
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>Recommended</AnalysisMode>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+    <!-- Reproducible, deterministic builds. -->
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!--
+      Treat warnings as errors for authored projects. CI relies on this to
+      fail a build on any compiler or analyzer warning (requirement A1 / 4.6).
+      This is intentionally the default for every project; generated code is
+      excluded below rather than by disabling this flag.
+    -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!--
+      CS1591 (missing XML comment) would require a doc comment on every public
+      member. coding-standards §8 asks for XML docs on public API contracts and
+      reusable nontrivial services, not on every member, so this specific
+      warning is reported but does not fail the build.
+    -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Scope generated-code exclusions correctly.
+
+    Analyzers and the C# compiler suppress diagnostics in generated code when a
+    file is recognized as generated. Recognition happens three ways, all of
+    which authored code here relies on rather than relaxing the strict gate:
+
+      1. Files matching the conventional generated-file name patterns
+         (*.designer.cs, *.generated.cs, *.g.cs, *.g.i.cs, TemporaryGenerated*,
+         AssemblyInfo.cs, AssemblyAttributes.cs). The default value of
+         GeneratedCodeAnalysisFlags treats these as generated.
+      2. Files carrying the [GeneratedCode] attribute (source generators emit
+         this automatically).
+      3. Paths marked `generated_code = true` in .editorconfig — the root
+         .editorconfig marks EF Core's Migrations folder this way.
+
+    Because of (3), EF migration output does not need to break the
+    warnings-as-errors gate for authored source. No project-wide relaxation of
+    TreatWarningsAsErrors is required.
+  -->
+
+</Project>

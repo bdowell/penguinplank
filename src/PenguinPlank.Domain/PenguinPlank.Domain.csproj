@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TargetFramework, LangVersion, Nullable, ImplicitUsings, analyzers, and
+    warnings-as-errors come from the root Directory.Build.props. Domain depends
+    on nothing — no project or framework references are added here (dependency
+    rule: coding-standards §3).
+  -->
+
+</Project>

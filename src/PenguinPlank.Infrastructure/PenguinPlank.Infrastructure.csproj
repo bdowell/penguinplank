@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Shared build settings come from the root Directory.Build.props.
+    Infrastructure implements Application contracts (EF Core, adapters) and so
+    references Application and Domain only (dependency rule: coding-standards §3).
+  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\PenguinPlank.Application\PenguinPlank.Application.csproj" />
+    <ProjectReference Include="..\PenguinPlank.Domain\PenguinPlank.Domain.csproj" />
+  </ItemGroup>
+
+  <!--
+    EF Core 10 belongs in Infrastructure only (coding-standards §3: Domain has no EF
+    Core dependency). Versions are pinned to the exact EF Core 10 servicing patch that
+    pairs with the net10.0 target. The .Design package provides the design-time services
+    used by the migration tooling in task 3.5; it brings no runtime dependency and is
+    referenced privately so it does not flow to the Api composition root.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+    <!--
+      ASP.NET Core Identity's EF Core store lives here because the Identity tables share the
+      single PenguinPlankDbContext (which derives from IdentityDbContext) and the one migration
+      chain. This package brings IdentityDbContext, IdentityUser<TKey>, and IdentityRole<TKey>.
+      Pinned to the same servicing patch as the rest of the net10.0 stack so the ASP.NET Core
+      shared framework reference unifies without an assembly-version conflict.
+    -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

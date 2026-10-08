@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TFM, nullable, analyzers, and warnings-as-errors come from the root
+    Directory.Build.props; GenerateDocumentationFile stays enabled there so the
+    IDE0005 (unused-using) analyzer runs on build.
+
+    IntegrationTests runs against a real SQL Server using the actual migrations
+    (EF InMemory is not evidence of relational correctness, coding-standards §7).
+    The project file name is IntegrationTests.csproj, which the CI pipeline
+    discovers by name.
+
+    CA1707 is suppressed for the test assembly: the mandated test naming
+    convention is Method_Scenario_ExpectedBehavior (coding-standards §4), which
+    intentionally uses underscores.
+  -->
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <!--
+      In-process API host for the acceptance-scenario tests (task 9.6): WebApplicationFactory
+      spins up Program.cs in-memory so #10/#11/#12 exercise the real HTTP pipeline (auth,
+      field-level projection, public/private content). Pinned to the same 10.0.x servicing patch
+      as the other Microsoft.* / ASP.NET Core references so the shared-framework assemblies unify.
+    -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PenguinPlank.Api\PenguinPlank.Api.csproj" />
+    <ProjectReference Include="..\..\src\PenguinPlank.Infrastructure\PenguinPlank.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\PenguinPlank.Application\PenguinPlank.Application.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    TFM, nullable, analyzers, and warnings-as-errors come from the root
+    Directory.Build.props; GenerateDocumentationFile stays enabled there so the
+    IDE0005 (unused-using) analyzer runs on build.
+
+    UnitTests exercises pure Domain policies and Application use cases with
+    controlled substitutes — no live SQL, network, file system, or real clock
+    (coding-standards §7). The project file name is UnitTests.csproj, which the
+    CI pipeline discovers by name.
+
+    It also references Infrastructure so the one Infrastructure adapter whose
+    behavior is orchestration (not relational) — OwnerBootstrapper — can be
+    exercised against the *real* ASP.NET Core Identity UserManager/RoleManager
+    wired over hand-written in-memory Identity stores (coding-standards §7
+    allows an in-memory Identity store for ORCHESTRATION logic; relational
+    correctness is covered by IntegrationTests against real SQL Server). No test
+    here touches a live database, network, file system, or real clock.
+
+    CA1707 is suppressed for the test assembly: the mandated test naming
+    convention is Method_Scenario_ExpectedBehavior (coding-standards §4), which
+    intentionally uses underscores.
+  -->
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      CsCheck is the property-based testing library for the 26 correctness
+      properties in the design (≥100 iterations each). It is chosen over
+      FsCheck because it is lighter-weight, C#-native, and composes directly
+      with xUnit Fact/Theory methods (no [Property] attribute runner needed),
+      so a property test reads like an ordinary Arrange/Act/Assert test
+      (coding-standards §7). Task 6.2 (Property 24) is the first property test;
+      subsequent property-test tasks (6.4, 6.6, 6.8, 6.10, 6.12, …) reuse this
+      same pinned reference. Version is pinned for reproducible CI.
+    -->
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="CsCheck" Version="4.9.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PenguinPlank.Domain\PenguinPlank.Domain.csproj" />
+    <ProjectReference Include="..\..\src\PenguinPlank.Application\PenguinPlank.Application.csproj" />
+    <ProjectReference Include="..\..\src\PenguinPlank.Infrastructure\PenguinPlank.Infrastructure.csproj" />
+    <!--
+      Api is referenced so the pure, HTTP-boundary error-mapping surface
+      (PenguinPlank.Api.Errors: ErrorCodeHttpMapping / ProblemDetailsBuilder) can be unit-tested
+      directly — the Property 24 test (task 6.2) asserts every error response is a ProblemDetails
+      with a stable code using exactly the same pure mapping the middleware uses, without starting
+      the application (coding-standards §1, §7).
+    -->
+    <ProjectReference Include="..\..\src\PenguinPlank.Api\PenguinPlank.Api.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,1337 @@
+{
+  "pbtResults": {
+    "6.2 Write property test for ProblemDetails error shape": {
+      "status": "passed",
+      "lastRunTimestamp": 1791318749402
+    },
+    "6.8 Write property test for audit coverage": {
+      "status": "not_run",
+      "lastRunTimestamp": 1791318957196
+    },
+    "6.12 Write property test for paging clamp and total count": {
+      "status": "passed",
+      "lastRunTimestamp": 1791319186394
+    },
+    "6.4 Write property test for idempotent replay": {
+      "status": "passed",
+      "lastRunTimestamp": 1791319242715
+    },
+    "6.6 Write property test for stale-edit protection": {
+      "status": "passed",
+      "lastRunTimestamp": 1791319280132
+    },
+    "7.2 Write property test for unique business code enforcement": {
+      "status": "passed",
+      "lastRunTimestamp": 1791375486773
+    },
+    "7.6 Write property test for wood proportion validation": {
+      "status": "passed",
+      "lastRunTimestamp": 1791375593167
+    },
+    "7.8 Write property test for Draft default and no automatic publication": {
+      "status": "passed",
+      "lastRunTimestamp": 1791376441692
+    },
+    "7.14 Write property tests for care versioning": {
+      "status": "passed",
+      "lastRunTimestamp": 1791376518286
+    },
+    "7.16 Write property test for public projection safety": {
+      "status": "passed",
+      "lastRunTimestamp": 1791376732798
+    }
+  },
+  "executionHistory": {
+    "1.1 Create the solution and project skeleton with enforced references": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027072
+      },
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302040385
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791303124872
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791303914887
+      }
+    ],
+    "1.2 Add root `.editorconfig` and `Directory.Build.props` central configuration": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027240
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791302506075
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791303923951
+      }
+    ],
+    "1.3 Create module-boundary namespace/folder placeholders and composition-root scaffold": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027316
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791302507037
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791304767684
+      }
+    ],
+    "1.4 Add CI pipeline enforcing build, format, and analyzer gates": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027417
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791302508182
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791303925255
+      }
+    ],
+    "2.1 Implement typed `Result`/`Result<T>` and stable business error codes in Domain": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027498
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791303929394
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791304422718
+      }
+    ],
+    "2.2 Define `ActorContext` and `IClock`/`TimeProvider` usage conventions in Application": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027572
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791303930723
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791304424578
+      }
+    ],
+    "2.3 Write unit tests for `Result<T>` semantics and error-code stability": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027662
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791304774434
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791307279766
+      }
+    ],
+    "3.1 Implement global column/type conventions and base entity configuration": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027707
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791304775313
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791307280764
+      }
+    ],
+    "3.2 Configure the implemented Catalog entities (R01/R10)": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027771
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791307858325
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791308390525
+      }
+    ],
+    "3.3 Configure cross-cutting + integration + identity/admin entities": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027833
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791308391679
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791309089750
+      }
+    ],
+    "3.4 Configure designed-only later-phase entities (schema only)": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027919
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791309090907
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791309834533
+      }
+    ],
+    "3.5 Create index strategy and the initial EF Core migration for SQL Server 2025 Express": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302027981
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791309839250
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791310850867
+      }
+    ],
+    "3.6 Write integration tests for schema constraints against real SQL Server": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028037
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791311275167
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791312039839
+      }
+    ],
+    "4.1 Configure ASP.NET Core Identity (staff accounts only) and Owner/Staff roles": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028095
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791311276245
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791312041122
+      }
+    ],
+    "4.2 Implement one-time Owner bootstrap with no default production password": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028166
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791312052485
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791312593326
+      }
+    ],
+    "4.3 Implement API authorization policy handlers and field-level allowlist projection": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028216
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791312053615
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791312594682
+      }
+    ],
+    "4.4 Write use-case tests for authorization projection and bootstrap": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028300
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791312600710
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313022316
+      }
+    ],
+    "5. Checkpoint — foundation builds and schema verified": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028358
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313035482
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313085889
+      }
+    ],
+    "6.1 Implement ProblemDetails mapping with stable error code + correlation ID": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028427
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313096658
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791317320735
+      }
+    ],
+    "6.2 Write property test for ProblemDetails error shape": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028486
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791318277710
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791318775444
+      }
+    ],
+    "6.3 Implement the idempotency pipeline and `IIdempotencyStore`": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028553
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313098025
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791317322140
+      }
+    ],
+    "6.4 Write property test for idempotent replay": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028609
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791318776772
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373098693
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373107939
+      }
+    ],
+    "6.5 Implement ETag/If-Match optimistic concurrency helpers": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028705
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313099480
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791317323381
+      }
+    ],
+    "6.6 Write property test for stale-edit protection": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028761
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791318777797
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373099984
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373109400
+      }
+    ],
+    "6.7 Implement `IAuditSink` + EF SaveChanges interceptor": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028849
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791317337760
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791318267276
+      }
+    ],
+    "6.8 Write property test for audit coverage": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028901
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791318779194
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373101452
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373110356
+      }
+    ],
+    "6.9 Implement `IFileStore` local adapter with media validation and authorized access": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302028956
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313100433
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791317324523
+      }
+    ],
+    "6.10 Write property test for media upload validation": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029024
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791318780119
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373102422
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373111761
+      }
+    ],
+    "6.11 Implement generic paging/filter/sort primitives for GET lists": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029082
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313101514
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791317326065
+      }
+    ],
+    "6.12 Write property test for paging clamp and total count": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029142
+      },
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791318781251
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373103394
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373112561
+      }
+    ],
+    "6.13 Write integration tests for idempotency uniqueness, ETag concurrency, and audit transactionality on real SQL Server": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029201
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373123165
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373486294
+      }
+    ],
+    "7.1 Implement `SkuPolicy` and piece-code uniqueness validation": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029268
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373652870
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374062871
+      }
+    ],
+    "7.2 Write property test for unique business code enforcement": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029332
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374890526
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376278988
+      }
+    ],
+    "7.3 Implement `DimensionPolicy`": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029411
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373654375
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374064477
+      }
+    ],
+    "7.4 Write property test for dimension validation": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029466
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374892978
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376281358
+      }
+    ],
+    "7.5 Implement wood-composition proportion validation": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029535
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373655301
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374065507
+      }
+    ],
+    "7.6 Write property test for wood proportion validation": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029586
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374894832
+      }
+    ],
+    "7.7 Implement publication-default and no-auto-publish rule": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029650
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373656716
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374066472
+      }
+    ],
+    "7.8 Write property test for Draft default and no automatic publication": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029714
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376306197
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376778447
+      }
+    ],
+    "7.9 Implement `TrackingModeChangePolicy`": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029777
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373657529
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374067939
+      }
+    ],
+    "7.10 Write property test for tracking-mode change guard": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029838
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374893976
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376282047
+      }
+    ],
+    "7.11 Implement archived-master-data transaction guard": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029894
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374084229
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374879495
+      }
+    ],
+    "7.12 Write property test for archived rejection": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302029970
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374891594
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376283084
+      }
+    ],
+    "7.13 Implement `CareVersionResolver` and append-only versioning rule": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030055
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374086201
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374876659
+      }
+    ],
+    "7.14 Write property tests for care versioning": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030123
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376308639
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376780827
+      }
+    ],
+    "7.15 Implement `PublicProjectionPolicy`": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030188
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374085064
+      },
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791374877969
+      }
+    ],
+    "7.16 Write property test for public projection safety": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030248
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376307648
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376781408
+      }
+    ],
+    "8.1 Define Application boundary interfaces for catalog": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030308
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376795517
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791377898958
+      }
+    ],
+    "8.2 Implement catalog use cases orchestrating domain policies": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030381
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791377908547
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791379158144
+      }
+    ],
+    "8.3 Implement Infrastructure EF Core persistence for the catalog contracts": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030464
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791379172775
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791383236444
+      }
+    ],
+    "8.4 Write use-case tests with controlled substitutes": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030544
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791383244546
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791384903829
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791392235487
+      }
+    ],
+    "8.5 Write integration tests for catalog persistence on real SQL Server": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030613
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791383245217
+      },
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791384902714
+      }
+    ],
+    "9.1 Implement `/api/v1` catalog endpoints with Contracts DTOs": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030685
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791392264082
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791393194192
+      }
+    ],
+    "9.2 Implement media endpoints": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030756
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791393219738
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791403202269
+      }
+    ],
+    "9.3 Implement administration/auth endpoints and wire the composition root": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030819
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791403233440
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791405305903
+      }
+    ],
+    "9.4 Enforce field-level Owner/Staff authorization and deny unauthenticated private reads": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302030877
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791405326148
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791407451760
+      }
+    ],
+    "9.5 Write property tests for authorization and unauthorized access": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031025
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791407462867
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791415482210
+      }
+    ],
+    "9.6 Write integration tests for acceptance scenarios #10, #11, #12": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031082
+      },
+      {
+        "executionId": "439397c7-aee7-42d5-97c2-553ff2bd5b3a",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791415486950
+      }
+    ],
+    "10. Checkpoint — catalog vertical slice complete": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031143
+      }
+    ],
+    "11.1 Implement `IIntegrationConnectionStore` and `ICredentialStore` indirection": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031202
+      }
+    ],
+    "11.2 Write property test for credential secrecy": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031289
+      }
+    ],
+    "11.3 Implement `IEntityMappingStore` with uniqueness and SKU-match-as-suggestion": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031366
+      }
+    ],
+    "11.4 Write property tests for mapping": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031439
+      }
+    ],
+    "11.5 Implement durable `IInboxStore` with dedupe-by-delivery-key": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031498
+      }
+    ],
+    "11.6 Write property test for inbox dedupe": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031575
+      }
+    ],
+    "11.7 Implement transactional `IOutboxStore`": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031654
+      }
+    ],
+    "11.8 Write property test for outbox atomicity": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031724
+      }
+    ],
+    "11.9 Implement `ISyncCheckpointStore`, SyncRun/SyncException queue, and pause/resume": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031783
+      }
+    ],
+    "11.10 Write integration tests for inbox/outbox/mapping on real SQL Server": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031861
+      }
+    ],
+    "12.1 Implement bounded retry backoff policy (pure)": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031921
+      }
+    ],
+    "12.2 Write property test for retry backoff": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302031983
+      }
+    ],
+    "12.3 Implement the Background_Worker hosted service": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032055
+      }
+    ],
+    "12.4 Write use-case tests for worker leasing and crash-safe reclaim": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032128
+      }
+    ],
+    "13.1 Implement `/api/integrations/webhooks/{provider}` endpoints": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032185
+      }
+    ],
+    "13.2 Write property test for forged callbacks": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032260
+      }
+    ],
+    "13.3 Implement owner-only integration management endpoints": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032326
+      }
+    ],
+    "13.4 Write integration test for acceptance scenario #21": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032401
+      }
+    ],
+    "14.1 Implement date-only local-date preservation across DST": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032505
+      }
+    ],
+    "14.2 Write property test for date-only preservation": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032575
+      }
+    ],
+    "15. Checkpoint — integration foundation complete, connectors disabled": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032664
+      }
+    ],
+    "16.1 Implement the typed API client aligned with Contracts": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032734
+      }
+    ],
+    "16.2 Implement login view and navigation shell": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032815
+      }
+    ],
+    "16.3 Implement catalog editing views with stale-edit and connectivity-loss UX": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032875
+      }
+    ],
+    "16.4 Write bUnit component tests": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302032942
+      }
+    ],
+    "16.5 Write Playwright core-workflow smoke tests": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302033004
+      }
+    ],
+    "17.1 Implement orphan/missing media detection": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302033078
+      }
+    ],
+    "17.2 Write property test for orphan/missing media detection": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302033143
+      }
+    ],
+    "17.3 Author deployment, backup, and restore baseline (config + scripts + runbook)": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302033204
+      }
+    ],
+    "17.4 Write restore-to-fresh-environment smoke test (acceptance scenario #14)": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302033272
+      }
+    ],
+    "17.5 Implement a seedable catalog performance dataset and latency verification harness": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302033338
+      }
+    ],
+    "18. Final checkpoint — Phase A acceptance": [
+      {
+        "executionId": "66308512-0849-44b6-8aa8-62f63e917134",
+        "chatSessionId": "sess_aad81914-033c-4702-8d8d-15babd2bcee6",
+        "timestamp": 1791302033414
+      }
+    ],
+    "1. Establish solution structure, build configuration, and CI (A1)": [
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791304768127
+      }
+    ],
+    "2. Define cross-cutting primitives shared across layers (A1, A4)": [
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791307279862
+      }
+    ],
+    "3. Model the full Section 6 schema and create the initial migration (A2)": [
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791312039939
+      }
+    ],
+    "4. Implement Identity, owner bootstrap, and role policies (A2)": [
+      {
+        "executionId": "feafc849-4085-45e7-83da-803d4b76beba",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791313022479
+      }
+    ],
+    "6. Implement A4 cross-cutting runtime foundations (A4, A1)": [
+      {
+        "executionId": "ffd4401b-a445-442f-a455-4aa6aca631c5",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791373486391
+      }
+    ],
+    "7. Implement A3 catalog pure domain policies (R01, R10)": [
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791376781523
+      }
+    ],
+    "8. Implement A3 catalog use cases and persistence (R01, R10)": [
+      {
+        "executionId": "09b0bc78-84fb-44a8-88fc-d3ea3f4d1312",
+        "chatSessionId": "sess_41dba188-0516-4d65-b9f5-6f45b427b63d",
+        "timestamp": 1791384903890
+      }
+    ]
+  }
+}

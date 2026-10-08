@@ -1,0 +1,4 @@
+﻿C:\Users\Bret\Documents\GitHub\penguinplank\tests\UnitTests\Catalog\UniqueBusinessCodePropertyTests.cs(115,21): error CS0121: The call is ambiguous between the following methods or properties: 'CsCheck.Gen.Const<T>(T)' and 'CsCheck.Gen.Const<T>(System.Func<T>)' [C:\Users\Bret\Documents\GitHub\penguinplank\tests\UnitTests\UnitTests.csproj]
+Build FAILED.
+C:\Users\Bret\Documents\GitHub\penguinplank\tests\UnitTests\Catalog\UniqueBusinessCodePropertyTests.cs(115,21): error CS0121: The call is ambiguous between the following methods or properties: 'CsCheck.Gen.Const<T>(T)' and 'CsCheck.Gen.Const<T>(System.Func<T>)' [C:\Users\Bret\Documents\GitHub\penguinplank\tests\UnitTests\UnitTests.csproj]
+    1 Error(s)
