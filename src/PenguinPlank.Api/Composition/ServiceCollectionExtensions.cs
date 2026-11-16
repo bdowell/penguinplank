@@ -107,6 +107,21 @@ public static class ServiceCollectionExtensions
         // Identity managers). Registered after AddIdentity so SignInManager/UserManager exist.
         services.AddPenguinPlankAuth();
 
+        // Integration connection + credential-reference stores (task 11.1); scoped (DbContext).
+        services.AddPenguinPlankIntegrationConnections();
+
+        // External-to-internal entity mapping store (task 11.3); scoped (DbContext).
+        services.AddPenguinPlankIntegrationEntityMapping();
+
+        // Transactional outbox store (task 11.7); scoped so it shares the business transaction.
+        services.AddPenguinPlankIntegrationOutbox();
+
+        // Durable inbox store with dedupe-by-delivery-key (task 11.5); scoped (DbContext).
+        services.AddPenguinPlankIntegrationInbox();
+
+        // Sync checkpoint, history/exception queue, and pause/resume stores (task 11.9); scoped.
+        services.AddPenguinPlankIntegrationSync();
+
         // This remains the single composition root: no business code resolves services at runtime.
         return services;
     }

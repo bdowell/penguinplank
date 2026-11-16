@@ -200,7 +200,7 @@ Conventions used below:
     - Create/archive/version flows via actual migrations; duplicate-code DB rejection; care-version immutability enforced at the row level.
     - _Requirements: R01 (1.1, 1.2, 1.7, 1.8), R10 (2.3, 2.5)_
 
-- [ ] 9. Implement A3 catalog, media, and administration API endpoints (R01, R10, A2, A4)
+- [x] 9. Implement A3 catalog, media, and administration API endpoints (R01, R10, A2, A4)
   - [x] 9.1 Implement `/api/v1` catalog endpoints with Contracts DTOs
     - `GET/POST /products`, `GET/PATCH /products/{id}`, `/variants`, `/pieces`, `/wood-species`, `/care-profiles` + versions; thin endpoints mapping to use cases; paging/filter/stable-sort/total-count; `Idempotency-Key` on mutations; ETag/`If-Match` on edits; versioned request/response DTOs with no persistence entities; timestamps with offsets, explicit units/currency, no EF graph serialization.
     - _Requirements: R01 (1.1, 1.6, 1.9), A4 (6.1, 6.2, 6.5), A8 (10.3), A1 (4.3)_
@@ -217,7 +217,7 @@ Conventions used below:
   - [x] 9.5 Write property tests for authorization and unauthorized access
     - **Property 11: Staff never receives financial data or owner/credential controls** — Validates 5.10, 5.11, 9.5
     - **Property 12: Unauthorized callers are denied private data** — Validates 6.11, 7.4, 9.4
-  - [ ] 9.6 Write integration tests for acceptance scenarios #10, #11, #12
+  - [x] 9.6 Write integration tests for acceptance scenarios #10, #11, #12
     - #10 Staff cannot obtain unit costs/profits via any endpoint or field; #11 unauthenticated callers denied private data; #12 care-version preserved + public content excludes internal notes.
     - _Requirements: A2 (5.11), A5 (7.4), R10 (2.4, 2.11)_
 
@@ -226,31 +226,31 @@ Conventions used below:
   - _Requirements: R01, R10, A2, A4_
 
 - [ ] 11. Implement A4a integration foundation stores (R11) — connectors disabled
-  - [ ] 11.1 Implement `IIntegrationConnectionStore` and `ICredentialStore` indirection
+  - [x] 11.1 Implement `IIntegrationConnectionStore` and `ICredentialStore` indirection
     - Record connection (platform, account/shop identity, scopes, API version, enabled capabilities, sync direction, health, `Enabled=false`); credential **reference** only — secret never stored in DB/logs/responses/browser; record revocation/expiration and stop credential use.
     - _Requirements: R11 (3.1, 3.2, 3.3)_
   - [ ] 11.2 Write property test for credential secrecy
     - **Property 21: Credential secrets are never exposed**
     - **Validates: Requirements 3.2, 3.12, 8.5**
-  - [ ] 11.3 Implement `IEntityMappingStore` with uniqueness and SKU-match-as-suggestion
+  - [x] 11.3 Implement `IEntityMappingStore` with uniqueness and SKU-match-as-suggestion
     - Preserve platform/account/external identifiers with unique association to one internal record; reject duplicate triple; surface detected SKU matches as reviewable suggestions, never silent authoritative mappings.
     - _Requirements: R11 (3.4, 3.5)_
   - [ ] 11.4 Write property tests for mapping
     - **Property 10: EntityMapping uniqueness and identifier preservation** — Validates 3.4
     - **Property 22: SKU matches are suggestions, not silent mappings** — Validates 3.5
-  - [ ] 11.5 Implement durable `IInboxStore` with dedupe-by-delivery-key
+  - [x] 11.5 Implement durable `IInboxStore` with dedupe-by-delivery-key
     - `TryRecordAsync` dedupes by unique DeliveryKey; durable record before acknowledgment; repeated/out-of-order keys reconcile authoritative state rather than apply repeated stock changes.
     - _Requirements: R11 (3.6, 3.8)_
   - [ ] 11.6 Write property test for inbox dedupe
     - **Property 18: Inbox dedupe by delivery key is idempotent**
     - **Validates: Requirements 3.8**
-  - [ ] 11.7 Implement transactional `IOutboxStore`
+  - [-] 11.7 Implement transactional `IOutboxStore`
     - Enqueue an outbox job in the **same transaction** as the business change that requires it (transactional outbox); job exists iff the change committed.
     - _Requirements: R11 (3.14)_
   - [ ] 11.8 Write property test for outbox atomicity
     - **Property 19: Transactional outbox atomicity**
     - **Validates: Requirements 3.14**
-  - [ ] 11.9 Implement `ISyncCheckpointStore`, SyncRun/SyncException queue, and pause/resume
+  - [x] 11.9 Implement `ISyncCheckpointStore`, SyncRun/SyncException queue, and pause/resume
     - Cursor read/advance for incremental polling/backfill; exception queue for permanent mapping/permission errors; sync history exposes last success, backlog, failed items, affected resource, redacted error, retry/reconcile actions; pause stops new outgoing work while preserving receipts/mappings/history.
     - _Requirements: R11 (3.9, 3.11, 3.12, 3.13)_
   - [ ] 11.10 Write integration tests for inbox/outbox/mapping on real SQL Server

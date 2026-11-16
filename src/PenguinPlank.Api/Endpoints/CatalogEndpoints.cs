@@ -80,11 +80,11 @@ public static class CatalogEndpoints
             string? search,
             string? category,
             string? publicationState,
-            bool includeArchived,
-            int? page,
-            int? pageSize,
-            string? sort,
-            bool desc) =>
+            bool includeArchived = false,
+            int? page = null,
+            int? pageSize = null,
+            string? sort = null,
+            bool desc = false) =>
         {
             try
             {
@@ -169,11 +169,11 @@ public static class CatalogEndpoints
             string? search,
             string? trackingMode,
             string? publicationState,
-            bool includeArchived,
-            int? page,
-            int? pageSize,
-            string? sort,
-            bool desc) =>
+            bool includeArchived = false,
+            int? page = null,
+            int? pageSize = null,
+            string? sort = null,
+            bool desc = false) =>
         {
             try
             {
@@ -280,11 +280,11 @@ public static class CatalogEndpoints
             Guid? variantId,
             string? search,
             string? publicationState,
-            bool includeArchived,
-            int? page,
-            int? pageSize,
-            string? sort,
-            bool desc) =>
+            bool includeArchived = false,
+            int? page = null,
+            int? pageSize = null,
+            string? sort = null,
+            bool desc = false) =>
         {
             try
             {

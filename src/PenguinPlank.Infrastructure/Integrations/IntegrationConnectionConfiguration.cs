@@ -64,9 +64,18 @@ internal sealed class IntegrationConnectionConfiguration : IEntityTypeConfigurat
         builder.Property(connection => connection.Enabled)
             .HasDefaultValue(false);
 
+        // A connection starts un-paused; pausing stops new outgoing work only (requirement 3.13).
+        builder.Property(connection => connection.IsPaused)
+            .HasDefaultValue(false);
+
         // Only a reference to the secret is ever stored — never the secret value itself (3.2).
         builder.Property(connection => connection.CredentialReference)
             .HasMaxLength(400);
+
+        builder.Property(connection => connection.CredentialState)
+            .HasConversion<string>()
+            .HasMaxLength(32)
+            .HasDefaultValue(CredentialState.Active);
 
         builder.HasIndex(connection => new { connection.Platform, connection.Account });
     }

@@ -62,9 +62,27 @@ public class IntegrationConnection : VersionedEntity
     public bool Enabled { get; set; }
 
     /// <summary>
+    /// Whether the Owner has paused the connection. While paused, no new outgoing work is started;
+    /// existing receipts, mappings, and history are preserved (requirement 3.13).
+    /// </summary>
+    public bool IsPaused { get; set; }
+
+    /// <summary>The instant the connection was last paused, when paused.</summary>
+    public DateTimeOffset? PausedAtUtc { get; set; }
+
+    /// <summary>
     /// A reference to the external credential secret (held encrypted or in the deployment secret
     /// store). <b>Never the secret value itself</b> (requirement 3.2). Null until a credential is
     /// associated.
     /// </summary>
     public string? CredentialReference { get; set; }
+
+    /// <summary>
+    /// The recorded state of the credential: active, revoked, or expired. A revoked or expired
+    /// credential stops being used (requirement 3.3).
+    /// </summary>
+    public CredentialState CredentialState { get; set; } = CredentialState.Active;
+
+    /// <summary>The instant <see cref="CredentialState"/> last changed, or null if it never has.</summary>
+    public DateTimeOffset? CredentialStateChangedAtUtc { get; set; }
 }

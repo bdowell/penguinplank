@@ -1136,6 +1136,16 @@ namespace PenguinPlank.Infrastructure.Persistence.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("nvarchar(400)");
 
+                    b.Property<string>("CredentialState")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)")
+                        .HasDefaultValue("Active");
+
+                    b.Property<DateTimeOffset?>("CredentialStateChangedAtUtc")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<bool>("Enabled")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -1152,6 +1162,14 @@ namespace PenguinPlank.Infrastructure.Persistence.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)")
                         .HasDefaultValue("Unknown");
+
+                    b.Property<bool>("IsPaused")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTimeOffset?>("PausedAtUtc")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Platform")
                         .IsRequired()
