@@ -76,6 +76,33 @@ public sealed class EntityMappingStoreTests
     }
 
     [Fact]
+    public async Task MapAsync_SameExternalIdDifferentAccount_MapsBothAsync()
+    {
+        (Guid firstConnectionId, string firstAccount) = await InsertConnectionAsync();
+        (Guid secondConnectionId, string secondAccount) = await InsertConnectionAsync();
+        var first = new EntityMappingRequest(firstConnectionId, Platform, firstAccount, "gid://6", "ProductVariant", Guid.NewGuid());
+        var second = new EntityMappingRequest(secondConnectionId, Platform, secondAccount, "gid://6", "ProductVariant", Guid.NewGuid());
+
+        Result<EntityMappingRecord> firstResult;
+        Result<EntityMappingRecord> secondResult;
+        await using (PenguinPlankDbContext context = _fixture.CreateContext())
+        {
+            firstResult = await new EfEntityMappingStore(context, TimeProvider.System).MapAsync(first, CancellationToken.None);
+        }
+
+        await using (PenguinPlankDbContext context = _fixture.CreateContext())
+        {
+            secondResult = await new EfEntityMappingStore(context, TimeProvider.System).MapAsync(second, CancellationToken.None);
+        }
+
+        Assert.True(firstResult.IsSuccess);
+        Assert.True(secondResult.IsSuccess);
+        await using PenguinPlankDbContext verify = _fixture.CreateContext();
+        Assert.Equal(2, await verify.EntityMappings.CountAsync(mapping =>
+            (mapping.Account == firstAccount || mapping.Account == secondAccount) && mapping.ExternalId == "gid://6"));
+    }
+
+    [Fact]
     public async Task MapAsync_ConcurrentSameTriple_ExactlyOneSucceedsAsync()
     {
         (Guid connectionId, string account) = await InsertConnectionAsync();

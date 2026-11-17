@@ -49,6 +49,10 @@ public static class MediaServiceCollectionExtensions
         services.AddScoped<GetMediaMetadataUseCase>();
         services.AddScoped<UpdateMediaMetadataUseCase>();
 
+        // Missing/orphan media detection (requirement 8.7): metadata key reader + detector use case.
+        services.AddScoped<IMediaStorageKeyReader, EfMediaStorageKeyReader>();
+        services.AddScoped<DetectMediaIntegrityIssuesUseCase>();
+
         return services;
     }
 }

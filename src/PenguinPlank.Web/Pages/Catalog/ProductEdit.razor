@@ -1,0 +1,189 @@
+@page "/catalog/products/{ProductId:guid}"
+@implements IDisposable
+@inject ICatalogApiClient CatalogApi
+@inject IIdempotencyKeyGenerator KeyGenerator
+
+<CatalogPage Title="@(_product?.Name ?? "Edit product")">
+    <p><a href="catalog/products">Back to products</a></p>
+
+    @if (_loadError is not null)
+    {
+        <CatalogBanner Message="@CatalogMessages.DescribeLoad(_loadError)" IsError="true" Tone="error">
+            <Actions>
+                <button type="button" class="cp-button secondary" @onclick="LoadAsync">Try again</button>
+            </Actions>
+        </CatalogBanner>
+    }
+    else if (_product is null)
+    {
+        <p role="status">Loading productâ€¦</p>
+    }
+    else
+    {
+        <CatalogBanner Message="@Session.Message" IsError="@IsErrorStatus" Tone="@Tone">
+            <Actions>
+                @if (Session.RequiresReload)
+                {
+                    <button type="button" class="cp-button" @onclick="LoadAsync">Reload latest version</button>
+                }
+            </Actions>
+        </CatalogBanner>
+
+        @if (_problems.Count > 0)
+        {
+            <div class="cp-banner error cp-status" role="alert">
+                <p>Fix these before saving:</p>
+                <ul>
+                    @foreach (string problem in _problems)
+                    {
+                        <li>@problem</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form @onsubmit="SaveAsync" aria-busy="@(Session.Status == CatalogEditStatus.Saving ? "true" : "false")">
+            <fieldset disabled="@(Session.Status == CatalogEditStatus.Saving)">
+                <legend>Product details</legend>
+                <div class="cp-field">
+                    <label for="product-name">Name (required)</label>
+                    <input id="product-name" required aria-required="true" maxlength="@ProductDraft.MaximumNameLength"
+                           @bind="_draft.Name" @bind:event="oninput" />
+                </div>
+                <div class="cp-field">
+                    <label for="product-category">Category</label>
+                    <input id="product-category" @bind="_draft.Category" @bind:event="oninput" />
+                </div>
+                <div class="cp-field">
+                    <label for="product-description">Public description</label>
+                    <textarea id="product-description" rows="4" aria-describedby="product-description-hint"
+                              @bind="_draft.PublicDescription" @bind:event="oninput"></textarea>
+                    <span id="product-description-hint" class="cp-hint">Shown to customers once the product is approved for publication.</span>
+                </div>
+                <div class="cp-field">
+                    <label for="product-notes">Internal notes</label>
+                    <textarea id="product-notes" rows="3" aria-describedby="product-notes-hint"
+                              @bind="_draft.InternalNotes" @bind:event="oninput"></textarea>
+                    <span id="product-notes-hint" class="cp-hint">Never shown to customers.</span>
+                </div>
+            </fieldset>
+            <dl>
+                <dt>Publication</dt>
+                <dd>@_product.PublicationState</dd>
+                <dt>Status</dt>
+                <dd>@(_product.IsActive ? "Active" : "Archived")</dd>
+                <dt>Last updated</dt>
+                <dd>@_product.UpdatedAt.ToString("f")</dd>
+            </dl>
+            <button type="submit" class="cp-button" disabled="@(!Session.CanSubmit)">@SaveLabel</button>
+        </form>
+    }
+</CatalogPage>
+
+@code {
+    private readonly CancellationTokenSource _cts = new();
+    private CatalogEditSession<UpdateProductContract>? _session;
+    private ProductResponse? _product;
+    private ProductDraft _draft = new();
+    private IReadOnlyList<string> _problems = [];
+    private ApiError? _loadError;
+
+    [Parameter]
+    public Guid ProductId { get; set; }
+
+    private CatalogEditSession<UpdateProductContract> Session => _session ??= new CatalogEditSession<UpdateProductContract>(KeyGenerator);
+
+    private bool IsErrorStatus => Session.Status is CatalogEditStatus.Conflict or CatalogEditStatus.Unsaved or CatalogEditStatus.Rejected;
+
+    private string Tone => Session.Status switch
+    {
+        CatalogEditStatus.Conflict or CatalogEditStatus.Unsaved => "warning",
+        CatalogEditStatus.Rejected => "error",
+        _ => "success",
+    };
+
+    private string SaveLabel => Session.Status switch
+    {
+        CatalogEditStatus.Saving => "Savingâ€¦",
+        CatalogEditStatus.Unsaved => "Try again",
+        _ => "Save changes",
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+
+    private async Task LoadAsync()
+    {
+        ApiResult<ProductResponse> result;
+        try
+        {
+            result = await CatalogApi.GetProductAsync(ProductId, _cts.Token);
+        }
+        catch (OperationCanceledException) when (_cts.IsCancellationRequested)
+        {
+            return;
+        }
+
+        ApplyLoaded(result);
+    }
+
+    private void ApplyLoaded(ApiResult<ProductResponse> result)
+    {
+        _loadError = result.Error;
+        if (result.Value is { } product)
+        {
+            _product = product;
+            _draft = ProductDraft.From(product);
+            _problems = [];
+            Session.Load(product.ETag);
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        _problems = _draft.Validate();
+        if (_problems.Count > 0)
+        {
+            return;
+        }
+
+        try
+        {
+            bool saved = await Session.SubmitAsync(
+                _draft.ToContract(),
+                (request, eTag, key, ct) => CatalogApi.UpdateProductAsync(ProductId, request, eTag, key, ct),
+                _cts.Token);
+            if (saved)
+            {
+                await ReloadAfterSaveAsync();
+            }
+        }
+        catch (OperationCanceledException) when (_cts.IsCancellationRequested)
+        {
+            // The page was left before the save finished.
+        }
+    }
+
+    private async Task ReloadAfterSaveAsync()
+    {
+        ApiResult<ProductResponse> result = await CatalogApi.GetProductAsync(ProductId, _cts.Token);
+        if (result.Value is { } product)
+        {
+            _product = product;
+            _draft = ProductDraft.From(product);
+            Session.CompleteSave(product.ETag);
+        }
+        else if (result.Error is { } error)
+        {
+            Session.CompleteSaveWithoutReload(error);
+        }
+    }
+}

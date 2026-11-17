@@ -60,6 +60,32 @@ public sealed class OutboxStoreTests
         Assert.Equal(1, await verify.IntegrationOutbox.CountAsync(row => row.OperationKey == key));
     }
 
+    [Fact]
+    public async Task EnqueueAsync_FailedCommit_PersistsNeitherChangeNorJobAsync()
+    {
+        Guid connectionId = await InsertConnectionAsync();
+        string key = $"op-{Guid.NewGuid():N}";
+
+        await using (PenguinPlankDbContext context = _fixture.CreateContext())
+        {
+            IntegrationConnection connection = await context.IntegrationConnections.SingleAsync(row => row.Id == connectionId);
+            connection.Enabled = true;
+
+            OutboxEnqueueOutcome outcome = await new EfOutboxStore(context, TimeProvider.System)
+                .EnqueueAsync(Job(connectionId, key), CancellationToken.None);
+            Assert.Equal(OutboxEnqueueOutcome.Staged, outcome);
+
+            // A concurrent writer commits the same key after the pre-check, so this commit must fail.
+            await EnqueueAndSaveAsync(Job(connectionId, key));
+
+            await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
+        }
+
+        await using PenguinPlankDbContext verify = _fixture.CreateContext();
+        Assert.False((await verify.IntegrationConnections.SingleAsync(row => row.Id == connectionId)).Enabled);
+        Assert.Equal(1, await verify.IntegrationOutbox.CountAsync(row => row.OperationKey == key));
+    }
+
     private static OutboxJob Job(Guid connectionId, string key)
     {
         return new OutboxJob(connectionId, new OperationKey(key), new PayloadRef("payload-1"));

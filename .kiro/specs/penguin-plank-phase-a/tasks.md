@@ -221,117 +221,122 @@ Conventions used below:
     - #10 Staff cannot obtain unit costs/profits via any endpoint or field; #11 unauthenticated callers denied private data; #12 care-version preserved + public content excludes internal notes.
     - _Requirements: A2 (5.11), A5 (7.4), R10 (2.4, 2.11)_
 
-- [ ] 10. Checkpoint — catalog vertical slice complete
+- [x] 10. Checkpoint — catalog vertical slice complete
   - Ensure all unit/property/integration tests pass, build is clean with warnings-as-errors, and format verification passes. Ask the user if questions arise.
   - _Requirements: R01, R10, A2, A4_
 
-- [ ] 11. Implement A4a integration foundation stores (R11) — connectors disabled
+- [x] 11. Implement A4a integration foundation stores (R11) — connectors disabled
   - [x] 11.1 Implement `IIntegrationConnectionStore` and `ICredentialStore` indirection
     - Record connection (platform, account/shop identity, scopes, API version, enabled capabilities, sync direction, health, `Enabled=false`); credential **reference** only — secret never stored in DB/logs/responses/browser; record revocation/expiration and stop credential use.
     - _Requirements: R11 (3.1, 3.2, 3.3)_
-  - [ ] 11.2 Write property test for credential secrecy
+  - [x] 11.2 Write property test for credential secrecy
     - **Property 21: Credential secrets are never exposed**
     - **Validates: Requirements 3.2, 3.12, 8.5**
   - [x] 11.3 Implement `IEntityMappingStore` with uniqueness and SKU-match-as-suggestion
     - Preserve platform/account/external identifiers with unique association to one internal record; reject duplicate triple; surface detected SKU matches as reviewable suggestions, never silent authoritative mappings.
     - _Requirements: R11 (3.4, 3.5)_
-  - [ ] 11.4 Write property tests for mapping
+  - [x] 11.4 Write property tests for mapping
     - **Property 10: EntityMapping uniqueness and identifier preservation** — Validates 3.4
     - **Property 22: SKU matches are suggestions, not silent mappings** — Validates 3.5
   - [x] 11.5 Implement durable `IInboxStore` with dedupe-by-delivery-key
     - `TryRecordAsync` dedupes by unique DeliveryKey; durable record before acknowledgment; repeated/out-of-order keys reconcile authoritative state rather than apply repeated stock changes.
     - _Requirements: R11 (3.6, 3.8)_
-  - [ ] 11.6 Write property test for inbox dedupe
+  - [x] 11.6 Write property test for inbox dedupe
     - **Property 18: Inbox dedupe by delivery key is idempotent**
     - **Validates: Requirements 3.8**
-  - [-] 11.7 Implement transactional `IOutboxStore`
+  - [x] 11.7 Implement transactional `IOutboxStore`
     - Enqueue an outbox job in the **same transaction** as the business change that requires it (transactional outbox); job exists iff the change committed.
     - _Requirements: R11 (3.14)_
-  - [ ] 11.8 Write property test for outbox atomicity
+  - [x] 11.8 Write property test for outbox atomicity
     - **Property 19: Transactional outbox atomicity**
     - **Validates: Requirements 3.14**
   - [x] 11.9 Implement `ISyncCheckpointStore`, SyncRun/SyncException queue, and pause/resume
     - Cursor read/advance for incremental polling/backfill; exception queue for permanent mapping/permission errors; sync history exposes last success, backlog, failed items, affected resource, redacted error, retry/reconcile actions; pause stops new outgoing work while preserving receipts/mappings/history.
     - _Requirements: R11 (3.9, 3.11, 3.12, 3.13)_
-  - [ ] 11.10 Write integration tests for inbox/outbox/mapping on real SQL Server
+  - [x] 11.10 Write integration tests for inbox/outbox/mapping on real SQL Server
     - Delivery-key uniqueness, operation-key uniqueness, transactional outbox rollback behavior, mapping-triple uniqueness via actual migrations.
     - _Requirements: R11 (3.4, 3.8, 3.14)_
 
-- [ ] 12. Implement Background_Worker and retry policy (R11, A7, A8)
-  - [ ] 12.1 Implement bounded retry backoff policy (pure)
+- [x] 12. Implement Background_Worker and retry policy (R11, A7, A8)
+  - [x] 12.1 Implement bounded retry backoff policy (pure)
     - Pure function computing attempt schedule: at most configured bounded attempts, base delay non-decreasing in attempt (before jitter), respects configured rate limits; jitter and rate limits injected.
     - _Requirements: R11 (3.10)_
-  - [ ] 12.2 Write property test for retry backoff
+  - [x] 12.2 Write property test for retry backoff
     - **Property 23: Retry backoff is bounded and increasing**
     - **Validates: Requirements 3.10**
-  - [ ] 12.3 Implement the Background_Worker hosted service
+  - [x] 12.3 Implement the Background_Worker hosted service
     - Hosted service (not SQL Server Agent) leasing inbox/outbox items with attempt history and crash-safe lease reclaim; injected `TimeProvider`, HTTP transport abstraction, and retry scheduler; runs through application services with a recorded system `ActorContext`; connectors remain disabled so no job dispatches to a real provider.
     - _Requirements: R11 (3.15, 3.16, 3.17), A7 (9.6), A8 (10.1)_
-  - [ ] 12.4 Write use-case tests for worker leasing and crash-safe reclaim
+  - [x] 12.4 Write use-case tests for worker leasing and crash-safe reclaim
     - Lease acquisition, attempt-history increment, expired-lease reclaim, system-actor audit on worker mutations — all with injected `TimeProvider`.
     - _Requirements: R11 (3.15), A7 (9.6)_
 
-- [ ] 13. Implement A7 webhook endpoints and integration management API (R11, A7)
-  - [ ] 13.1 Implement `/api/integrations/webhooks/{provider}` endpoints
+- [x] 13. Implement A7 webhook endpoints and integration management API (R11, A7)
+  - [x] 13.1 Implement `/api/integrations/webhooks/{provider}` endpoints
     - Validate provider signature/auth and payload size **before** acknowledgment; durably record to inbox (dedupe); reject forged/invalid-signature callbacks without recording them as authoritative; expose no business-read data anonymously.
     - _Requirements: R11 (3.6, 3.7), A7 (9.1, 9.2, 9.3, 9.4)_
-  - [ ] 13.2 Write property test for forged callbacks
+  - [x] 13.2 Write property test for forged callbacks
     - **Property 20: Forged provider callbacks are rejected**
     - **Validates: Requirements 3.7, 9.2, 9.3**
-  - [ ] 13.3 Implement owner-only integration management endpoints
+  - [x] 13.3 Implement owner-only integration management endpoints
     - `GET/POST /integrations/connections`, `/mappings`, `/sync-runs`, `/exceptions`, `POST .../pause`, `.../resume`, `.../retry`; deny Staff access to credential-reference data and owner integration/publishing controls; wire into the composition root.
     - _Requirements: R11 (3.12, 3.13), A7 (9.5)_
-  - [ ] 13.4 Write integration test for acceptance scenario #21
+  - [x] 13.4 Write integration test for acceptance scenario #21
     - #21 Forged provider callback rejected and not processed; Staff cannot access credentials or owner integration controls.
     - _Requirements: A7 (9.3, 9.5)_
 
-- [ ] 14. Implement A8 time/localization behavior and verify (R11, A8)
-  - [ ] 14.1 Implement date-only local-date preservation across DST
+- [x] 14. Implement A8 time/localization behavior and verify (R11, A8)
+  - [x] 14.1 Implement date-only local-date preservation across DST
     - Store/resolve event and follow-up date-only fields preserving the intended local date using America/Los_Angeles timezone rules (including DST); API timestamps returned with offsets and explicit units/currency.
     - _Requirements: A8 (10.1, 10.2, 10.3)_
-  - [ ] 14.2 Write property test for date-only preservation
+  - [x] 14.2 Write property test for date-only preservation
     - **Property 26: Date-only local-date preservation across DST**
     - **Validates: Requirements 10.2**
 
-- [ ] 15. Checkpoint — integration foundation complete, connectors disabled
+- [x] 15. Checkpoint — integration foundation complete, connectors disabled
   - Ensure all tests pass, build is clean, and verify no concrete Shopify/Square/Faire/Etsy/Meta adapter exists and every connection defaults to `Enabled=false`. Ask the user if questions arise.
   - _Requirements: R11 (3.17), A7, A8_
 
-- [ ] 16. Implement A5 Blazor WebAssembly browser shell (A5)
-  - [ ] 16.1 Implement the typed API client aligned with Contracts
+- [x] 16. Implement A5 Blazor WebAssembly browser shell (A5)
+  - [x] 16.1 Implement the typed API client aligned with Contracts
     - Same-origin typed HTTP client consuming `/api/v1`; no database driver/connection string/EF/SQL in Web; carries CSRF token and relies on the HttpOnly cookie session.
     - _Requirements: A5 (7.1, 7.2), A1 (4.4)_
-  - [ ] 16.2 Implement login view and navigation shell
+  - [x] 16.2 Implement login view and navigation shell
     - Login establishing the HttpOnly cookie session; nav shell with Dashboard, Products & Stock, Integrations (owner), Settings (owner); Workshop/Markets/Costing/Photos & Listings/Wholesale as Phase A placeholders.
     - _Requirements: A5 (7.1, 7.5)_
-  - [ ] 16.3 Implement catalog editing views with stale-edit and connectivity-loss UX
+  - [x] 16.3 Implement catalog editing views with stale-edit and connectivity-loss UX
     - Product/ProductVariant/ProductPiece editing via the typed client; changed `rowversion` surfaces a conflict + refresh prompt (If-Match 412) instead of silent overwrite; connectivity loss shows a clear unsaved/error state and **never queues business mutations**; responsive cards/detail sheets at narrow widths with keyboard access and accessible labels (aim WCAG 2.2 AA).
     - _Requirements: A5 (7.5, 7.6, 7.7, 7.8)_
-  - [ ] 16.4 Write bUnit component tests
+  - [x] 16.4 Write bUnit component tests
     - Catalog editing behavior and the stale-edit conflict/refresh flow (acceptance scenario #13 at the component layer).
     - _Requirements: A5 (7.6, 7.7)_
-  - [ ] 16.5 Write Playwright core-workflow smoke tests
+  - [x] 16.5 Write Playwright core-workflow smoke tests
     - Login, create/edit a variant, authorized media upload/download, narrow-width catalog flow; acceptance scenario #13 end-to-end.
     - _Requirements: A5 (7.5, 7.6, 7.7), A4 (6.11)_
 
-- [ ] 17. Implement A6 deployment, backup/restore, and A9 performance verification (A6, A9)
-  - [ ] 17.1 Implement orphan/missing media detection
+- [x] 17. Implement A6 deployment, backup/restore, and A9 performance verification (A6, A9)
+  - [x] 17.1 Implement orphan/missing media detection
     - Detector reporting exactly MediaAsset metadata whose backing file is missing and exactly stored files with no referencing metadata (orphans), and nothing else.
     - _Requirements: A6 (8.7)_
-  - [ ] 17.2 Write property test for orphan/missing media detection
+  - [x] 17.2 Write property test for orphan/missing media detection
     - **Property 25: Orphan and missing media detection**
     - **Validates: Requirements 8.7**
-  - [ ] 17.3 Author deployment, backup, and restore baseline (config + scripts + runbook)
+  - [x] 17.3 Author deployment, backup, and restore baseline (config + scripts + runbook)
     - Private HTTPS deployment with secure cookies and a least-privilege DB account (no `db_owner` at runtime); nightly SQL + media backup via the **OS scheduler** (no SQL Server Agent) with an off-host protected copy; back up relational metadata and media together; document ≤24h RPO / ≤4h RTO; capacity warnings at 70%/85% of the Express size limit; rate limiting on login and costly operations.
     - _Requirements: A6 (8.1, 8.2, 8.3, 8.5, 8.6, 8.7)_
-  - [ ] 17.4 Write restore-to-fresh-environment smoke test (acceptance scenario #14)
+  - [x] 17.4 Write restore-to-fresh-environment smoke test (acceptance scenario #14)
     - Restore DB + media to a fresh environment via actual migrations and complete a read/write smoke check.
     - _Requirements: A6 (8.3, 8.4)_
-  - [ ] 17.5 Implement a seedable catalog performance dataset and latency verification harness
+  - [x] 17.5 Implement a seedable catalog performance dataset and latency verification harness
     - Representative seed (toward 5,000 variants / 50,000 pieces) and a repeatable harness measuring catalog API read/mutation latency under 10 concurrent users against real SQL Server; document the Reference_Environment hardware, dataset, workload, and measurement method; assert documented targets (p95 reads <500 ms, mutations <1 s, excluding media/external network).
     - _Requirements: A9 (11.1, 11.2, 11.3, 11.4)_
+    - [x] 17.6 Serve the Blazor client from the API for local development (A5, A1)
+  - Add a reference from PenguinPlank.Api to PenguinPlank.Web (or serve its published output) so the Api hosts the WebAssembly client.
+  - In Program.cs, call UseBlazorFrameworkFiles and UseStaticFiles, and add MapFallbackToFile("index.html") for non-/api routes. Keep /api/* routes and the authorization fallback policy unchanged, and make sure unknown /api paths still return 404 and not index.html.
+  - Add a Development-only ConnectionStrings:Default placeholder using LocalDB or SQL Express (no secrets committed), and document applying migrations and running the one-time Owner bootstrap.
+  - Add a short "Run locally" section to docs/runbook-deployment-backup-restore.md.
 
-- [ ] 18. Final checkpoint — Phase A acceptance
+- [x] 18. Final checkpoint — Phase A acceptance
   - Ensure the full solution builds with warnings-as-errors, `dotnet format --verify-no-changes` passes, all unit/property/integration/component/E2E tests pass, acceptance scenarios #10–#14 and #21 are covered, migrations apply cleanly to a fresh SQL Server, and the restore smoke check succeeds. Ask the user if questions arise.
   - _Requirements: R01, R10, R11, A1–A9_
 

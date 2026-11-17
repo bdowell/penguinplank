@@ -1,39 +1,46 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">PenguinPlank.Web</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
+        <a class="navbar-brand" href="">Penguin Plank</a>
+        <button type="button"
+                class="navbar-toggler"
+                aria-label="Toggle navigation menu"
+                aria-controls="primary-navigation"
+                aria-expanded="@(!collapseNavMenu ? "true" : "false")"
+                @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon" aria-hidden="true"></span>
         </button>
     </div>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+<div id="primary-navigation" class="@NavMenuCssClass nav-scrollable" @onclick="CollapseNavMenu">
+    <nav class="nav flex-column" aria-label="Primary">
+        @foreach (NavigationItem item in Items)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="@item.Href" Match="@(item.Href.Length == 0 ? NavLinkMatch.All : NavLinkMatch.Prefix)">
+                    @item.Label
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 
 @code {
     private bool collapseNavMenu = true;
 
+    /// <summary>Gets or sets the entries to show, already filtered for the signed-in role.</summary>
+    [Parameter]
+    public IReadOnlyList<NavigationItem> Items { get; set; } = [];
+
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private void CollapseNavMenu()
+    {
+        collapseNavMenu = true;
     }
 }

@@ -103,7 +103,8 @@ public static class AuthEndpoints
 
             return Microsoft.AspNetCore.Http.Results.Ok(ToResponse(result.Value));
         })
-        .AllowAnonymous();
+        .AllowAnonymous()
+        .RequireRateLimiting(PenguinPlank.Api.Composition.RateLimitingOptions.LoginPolicyName);
     }
 
     private static void MapLogout(IEndpointRouteBuilder routes)

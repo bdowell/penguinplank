@@ -36,6 +36,27 @@ main {
         text-overflow: ellipsis;
     }
 
+.skip-link {
+    position: absolute;
+    left: -10000px;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    padding: 0.5rem 1rem;
+}
+
+    .skip-link:focus {
+        left: 0;
+    }
+
+.signed-in-as {
+    margin-right: 1rem;
+}
+
+.session-message {
+    padding: 2rem;
+}
+
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;

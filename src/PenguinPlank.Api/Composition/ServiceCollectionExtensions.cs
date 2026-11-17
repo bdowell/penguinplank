@@ -122,6 +122,12 @@ public static class ServiceCollectionExtensions
         // Sync checkpoint, history/exception queue, and pause/resume stores (task 11.9); scoped.
         services.AddPenguinPlankIntegrationSync();
 
+        // Provider webhook intake with the disabled signature verifier (task 13.1).
+        services.AddPenguinPlankIntegrationWebhooks(configuration);
+
+        // Background_Worker hosted service with disabled connectors (task 12.3).
+        services.AddPenguinPlankIntegrationWorker(configuration);
+
         // This remains the single composition root: no business code resolves services at runtime.
         return services;
     }

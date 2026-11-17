@@ -1,0 +1,210 @@
+@page "/catalog/variants/{VariantId:guid}"
+@implements IDisposable
+@inject ICatalogApiClient CatalogApi
+@inject IIdempotencyKeyGenerator KeyGenerator
+
+<CatalogPage Title="@(_variant?.Sku ?? "Edit variant")">
+    <p><a href="catalog/variants">Back to variants</a></p>
+
+    @if (_loadError is not null)
+    {
+        <CatalogBanner Message="@CatalogMessages.DescribeLoad(_loadError)" IsError="true" Tone="error">
+            <Actions>
+                <button type="button" class="cp-button secondary" @onclick="LoadAsync">Try again</button>
+            </Actions>
+        </CatalogBanner>
+    }
+    else if (_variant is null)
+    {
+        <p role="status">Loading variant…</p>
+    }
+    else
+    {
+        <CatalogBanner Message="@Session.Message" IsError="@IsErrorStatus" Tone="@Tone">
+            <Actions>
+                @if (Session.RequiresReload)
+                {
+                    <button type="button" class="cp-button" @onclick="LoadAsync">Reload latest version</button>
+                }
+            </Actions>
+        </CatalogBanner>
+
+        @if (_problems.Count > 0)
+        {
+            <div class="cp-banner error cp-status" role="alert">
+                <p>Fix these before saving:</p>
+                <ul>
+                    @foreach (string problem in _problems)
+                    {
+                        <li>@problem</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form @onsubmit="SaveAsync" aria-busy="@(Session.Status == CatalogEditStatus.Saving ? "true" : "false")">
+            <fieldset disabled="@(Session.Status == CatalogEditStatus.Saving)">
+                <legend>Variant details</legend>
+                <dl>
+                    <dt>SKU</dt>
+                    <dd>@_variant.Sku</dd>
+                    <dt>Tracking mode</dt>
+                    <dd>@_variant.TrackingMode</dd>
+                </dl>
+                <div class="cp-form-grid">
+                    <div class="cp-field">
+                        <label for="variant-unit">Unit of measure (required)</label>
+                        <input id="variant-unit" required aria-required="true" @bind="_draft.UnitOfMeasure" @bind:event="oninput" />
+                    </div>
+                    <div class="cp-field">
+                        <label for="variant-barcode">Barcode</label>
+                        <input id="variant-barcode" @bind="_draft.Barcode" @bind:event="oninput" />
+                    </div>
+                    <div class="cp-field">
+                        <label for="variant-finish">Finish</label>
+                        <input id="variant-finish" @bind="_draft.Finish" @bind:event="oninput" />
+                    </div>
+                    <div class="cp-field">
+                        <label for="variant-case-pack">Case pack</label>
+                        <input id="variant-case-pack" type="number" min="1" step="1" @bind="_draft.CasePack" />
+                    </div>
+                    <div class="cp-field">
+                        <label for="variant-retail">Retail price (@_variant.Currency)</label>
+                        <input id="variant-retail" type="number" min="0" step="0.01" inputmode="decimal" @bind="_draft.RetailPrice" />
+                    </div>
+                    <div class="cp-field">
+                        <label for="variant-wholesale">Wholesale price (@_variant.Currency)</label>
+                        <input id="variant-wholesale" type="number" min="0" step="0.01" inputmode="decimal" @bind="_draft.WholesalePrice" />
+                    </div>
+                </div>
+                <fieldset>
+                    <legend>Dimensions</legend>
+                    <div class="cp-form-grid">
+                        <div class="cp-field">
+                            <label for="variant-length">Length</label>
+                            <input id="variant-length" type="number" min="0" step="any" inputmode="decimal" @bind="_draft.Length" />
+                        </div>
+                        <div class="cp-field">
+                            <label for="variant-width">Width</label>
+                            <input id="variant-width" type="number" min="0" step="any" inputmode="decimal" @bind="_draft.Width" />
+                        </div>
+                        <div class="cp-field">
+                            <label for="variant-thickness">Thickness</label>
+                            <input id="variant-thickness" type="number" min="0" step="any" inputmode="decimal" @bind="_draft.Thickness" />
+                        </div>
+                        <div class="cp-field">
+                            <label for="variant-diameter">Diameter (round products)</label>
+                            <input id="variant-diameter" type="number" min="0" step="any" inputmode="decimal" @bind="_draft.Diameter" />
+                        </div>
+                        <div class="cp-field">
+                            <label for="variant-dimension-unit">Dimension unit</label>
+                            <input id="variant-dimension-unit" aria-describedby="variant-dimension-unit-hint" @bind="_draft.DimensionUnit" @bind:event="oninput" />
+                            <span id="variant-dimension-unit-hint" class="cp-hint">For example in or cm. Required when any dimension is entered.</span>
+                        </div>
+                    </div>
+                </fieldset>
+            </fieldset>
+            <button type="submit" class="cp-button" disabled="@(!Session.CanSubmit)">@SaveLabel</button>
+        </form>
+    }
+</CatalogPage>
+
+@code {
+    private readonly CancellationTokenSource _cts = new();
+    private CatalogEditSession<UpdateVariantContract>? _session;
+    private VariantResponse? _variant;
+    private VariantDraft _draft = new();
+    private IReadOnlyList<string> _problems = [];
+    private ApiError? _loadError;
+
+    [Parameter]
+    public Guid VariantId { get; set; }
+
+    private CatalogEditSession<UpdateVariantContract> Session => _session ??= new CatalogEditSession<UpdateVariantContract>(KeyGenerator);
+
+    private bool IsErrorStatus => Session.Status is CatalogEditStatus.Conflict or CatalogEditStatus.Unsaved or CatalogEditStatus.Rejected;
+
+    private string Tone => Session.Status switch
+    {
+        CatalogEditStatus.Conflict or CatalogEditStatus.Unsaved => "warning",
+        CatalogEditStatus.Rejected => "error",
+        _ => "success",
+    };
+
+    private string SaveLabel => Session.Status switch
+    {
+        CatalogEditStatus.Saving => "Saving…",
+        CatalogEditStatus.Unsaved => "Try again",
+        _ => "Save changes",
+    };
+
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+
+    private async Task LoadAsync()
+    {
+        ApiResult<VariantResponse> result;
+        try
+        {
+            result = await CatalogApi.GetVariantAsync(VariantId, _cts.Token);
+        }
+        catch (OperationCanceledException) when (_cts.IsCancellationRequested)
+        {
+            return;
+        }
+
+        _loadError = result.Error;
+        if (result.Value is { } variant)
+        {
+            _variant = variant;
+            _draft = VariantDraft.From(variant);
+            _problems = [];
+            Session.Load(variant.ETag);
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        _problems = _draft.Validate();
+        if (_problems.Count > 0)
+        {
+            return;
+        }
+
+        try
+        {
+            bool saved = await Session.SubmitAsync(
+                _draft.ToContract(),
+                (request, eTag, key, ct) => CatalogApi.UpdateVariantAsync(VariantId, request, eTag, key, ct),
+                _cts.Token);
+            if (saved)
+            {
+                await ReloadAfterSaveAsync();
+            }
+        }
+        catch (OperationCanceledException) when (_cts.IsCancellationRequested)
+        {
+            // The page was left before the save finished.
+        }
+    }
+
+    private async Task ReloadAfterSaveAsync()
+    {
+        ApiResult<VariantResponse> result = await CatalogApi.GetVariantAsync(VariantId, _cts.Token);
+        if (result.Value is { } variant)
+        {
+            _variant = variant;
+            _draft = VariantDraft.From(variant);
+            Session.CompleteSave(variant.ETag);
+        }
+        else if (result.Error is { } error)
+        {
+            Session.CompleteSaveWithoutReload(error);
+        }
+    }
+}

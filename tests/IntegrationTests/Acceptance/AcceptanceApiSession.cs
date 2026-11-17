@@ -86,7 +86,7 @@ internal static class AcceptanceApiSession
         return staffClient;
     }
 
-    private static async Task SignInAsync(HttpClient client, string email, string password)
+    internal static async Task SignInAsync(HttpClient client, string email, string password)
     {
         string csrf = await FetchCsrfTokenAsync(client);
 
@@ -100,7 +100,7 @@ internal static class AcceptanceApiSession
         EnsureSuccess(response, "login");
     }
 
-    private static async Task<string> FetchCsrfTokenAsync(HttpClient client)
+    internal static async Task<string> FetchCsrfTokenAsync(HttpClient client)
     {
         using HttpResponseMessage response = await client.GetAsync("/api/v1/auth/csrf");
         EnsureSuccess(response, "csrf token");

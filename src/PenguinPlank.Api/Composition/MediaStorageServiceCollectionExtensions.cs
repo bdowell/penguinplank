@@ -55,7 +55,9 @@ public static class MediaStorageServiceCollectionExtensions
             .ValidateOnStart();
 
         services.AddSingleton<IStorageKeyGenerator, GuidStorageKeyGenerator>();
-        services.AddSingleton<IFileStore, LocalFileStore>();
+        services.AddSingleton<LocalFileStore>();
+        services.AddSingleton<IFileStore>(provider => provider.GetRequiredService<LocalFileStore>());
+        services.AddSingleton<IStoredFileKeyEnumerator>(provider => provider.GetRequiredService<LocalFileStore>());
 
         return services;
     }

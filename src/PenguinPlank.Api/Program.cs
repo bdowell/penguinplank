@@ -20,9 +20,16 @@ builder.Services.AddOwnerBootstrap(builder.Configuration);
 // leaked detail. The matching middleware is added to the pipeline below.
 builder.Services.AddPenguinPlankProblemDetails();
 
+// Rate limiting on login/owner-bootstrap and costly operations (requirement A6 §8.5); rejections
+// are 429 ProblemDetails. The middleware is added to the pipeline below.
+builder.Services.AddPenguinPlankRateLimiting(builder.Configuration);
+
 // The HTTP pipeline is populated by later Phase A tasks. This skeleton only
 // establishes the host so the solution builds and the wiring can be verified.
 builder.Services.AddOpenApi();
+
+// The route constraint that keeps the Blazor client fallback off /api paths (task 17.6).
+builder.Services.AddBlazorClientHosting();
 
 var app = builder.Build();
 
@@ -35,12 +42,25 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+if (!app.Environment.IsDevelopment())
+{
+    // Tell browsers to use HTTPS only for this private host (requirement A6 §8.1 HTTPS deployment).
+    app.UseHsts();
+}
+
 app.UseHttpsRedirection();
+
+// Host the Blazor WebAssembly client from this origin (task 17.6). Static files are served before
+// authentication/authorization so the client shell can load before sign-in.
+app.UseBlazorClientFiles();
 
 // Authentication must run before authorization so the fallback authenticated-user policy
 // (registered in AddPenguinPlankAuthorization) can challenge with a registered scheme.
 app.UseAuthentication();
 app.UseAuthorization();
+
+// After authentication so the costly policy can partition by the authenticated user.
+app.UseRateLimiter();
 
 // Publish the authenticated actor onto the scoped IActorContextAccessor so the audit SaveChanges
 // interceptor can attribute a business mutation to its actor (requirements A2 §5.12, A4 §6.7).
@@ -73,11 +93,25 @@ app.MapMediaEndpoints();
 // HTTP; the settings edit enforces If-Match optimistic concurrency.
 app.MapAdministrationEndpoints();
 
+// The thin Owner-only integration management endpoints (task 13.3): /integrations/connections,
+// /mappings, /sync-runs, /exceptions plus pause, resume, and retry. All run under the OwnerOnly
+// policy so Staff never reach credential state or integration controls; no response carries a
+// credential reference or secret, and mutations require an Idempotency-Key.
+app.MapIntegrationEndpoints();
+
 // The thin authentication/session endpoints (task 9.3): login, logout, current-actor, and the CSRF
 // token. Login/logout depend only on the IStaffAuthenticator abstraction so a future mobile client
 // can use OIDC+PKCE behind the same contract; the Phase A implementation is the secure HttpOnly
 // same-origin cookie, with no bearer token in browser storage.
 app.MapAuthEndpoints();
+
+// The provider webhook endpoints (task 13.1): anonymous by design but accepted only after provider
+// signature and payload-size validation; they expose no business-read data.
+app.MapWebhookEndpoints();
+
+// Client-side routes fall back to index.html. Registered last and excluded for /api paths so an
+// unknown API path remains a 404 and the authorization fallback policy is unchanged.
+app.MapBlazorClientFallback();
 
 app.Run();
 

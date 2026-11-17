@@ -189,7 +189,8 @@ public static class AdministrationEndpoints
                 PageSize = result.PageSize,
             };
             return Microsoft.AspNetCore.Http.Results.Ok(response);
-        });
+        })
+        .RequireRateLimiting(PenguinPlank.Api.Composition.RateLimitingOptions.CostlyPolicyName);
     }
 
     private static void MapOwnerBootstrapEndpoint(IEndpointRouteBuilder routes)
@@ -236,7 +237,8 @@ public static class AdministrationEndpoints
             return Microsoft.AspNetCore.Http.Results.Ok(new { outcome = result.Value.ToString() });
         })
         .AllowAnonymous()
-        .DisableAntiforgery();
+        .DisableAntiforgery()
+        .RequireRateLimiting(PenguinPlank.Api.Composition.RateLimitingOptions.LoginPolicyName);
     }
 
     private static ActorContext ResolveActor(HttpContext httpContext) =>

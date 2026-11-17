@@ -1,0 +1,28 @@
+@* A status or error message. The live region stays in the page so screen readers announce changes. *@
+<div class="cp-status" role="@(IsError ? "alert" : "status")" aria-live="@(IsError ? "assertive" : "polite")" aria-atomic="true">
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <div class="cp-banner @Tone">
+            <p class="cp-banner-text">@Message</p>
+            @if (Actions is not null)
+            {
+                <div class="cp-banner-actions">@Actions</div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string? Message { get; set; }
+
+    /// <summary>Gets or sets the visual tone: "error", "warning", or "success".</summary>
+    [Parameter]
+    public string Tone { get; set; } = "success";
+
+    [Parameter]
+    public bool IsError { get; set; }
+
+    [Parameter]
+    public RenderFragment? Actions { get; set; }
+}

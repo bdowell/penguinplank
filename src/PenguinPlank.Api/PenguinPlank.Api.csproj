@@ -9,6 +9,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
     <!--
+      UseBlazorFrameworkFiles: hosts the PenguinPlank.Web WebAssembly client (task 17.6). Pinned to
+      10.0.14, the first patch fixing GHSA-qjpx-jqm5-h2c4 and GHSA-g27p-qf6j-c96c (10.0.12 fails NU1903).
+    -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.14" />
+    <!--
       The composition root registers the EF Core DbContext (AddDbContext / UseSqlServer),
       so it references the SqlServer provider directly. Pinned to the same EF Core 10
       servicing patch Infrastructure compiles against so the primary reference unifies
@@ -16,12 +21,16 @@
       producing an MSB3277/CS1705 assembly-version conflict).
     -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
+    <!-- Security pin for the SqlClient transitive dependency; see PenguinPlank.Infrastructure.csproj. -->
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PenguinPlank.Application\PenguinPlank.Application.csproj" />
     <ProjectReference Include="..\PenguinPlank.Contracts\PenguinPlank.Contracts.csproj" />
     <ProjectReference Include="..\PenguinPlank.Infrastructure\PenguinPlank.Infrastructure.csproj" />
+    <!-- Hosts the Blazor WebAssembly client from the API (task 17.6). Serving only; no code dependency. -->
+    <ProjectReference Include="..\PenguinPlank.Web\PenguinPlank.Web.csproj" />
   </ItemGroup>
 
 </Project>

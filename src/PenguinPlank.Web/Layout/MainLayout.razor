@@ -1,16 +1,109 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+@implements IDisposable
+@inject AuthSession Session
+@inject NavigationManager Navigation
+@using PenguinPlank.Web.Api
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+@if (Session.Status == SessionStatus.Authenticated && Session.Actor is not null)
+{
+    <a class="skip-link" href="#" @onclick="FocusMainContentAsync" @onclick:preventDefault>Skip to main content</a>
+    <div class="page">
+        <div class="sidebar">
+            <NavMenu Items="NavigationCatalog.GetItems(Session.Actor.Role)" />
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+        <main>
+            <div class="top-row px-4">
+                <span class="signed-in-as">@Session.Actor.Email (@Session.Actor.Role)</span>
+                <button type="button" class="btn btn-link" disabled="@signingOut" @onclick="SignOutAsync">Sign out</button>
+            </div>
+
+            @if (signOutError is not null)
+            {
+                <div class="alert alert-danger mx-4 mt-3" role="alert">@signOutError</div>
+            }
+
+            <article @ref="mainContent" tabindex="-1" class="content px-4">
+                @Body
+            </article>
+        </main>
+    </div>
+}
+else if (Session.Status == SessionStatus.Unavailable)
+{
+    <div class="session-message" role="alert">
+        <h1>Cannot check your session</h1>
+        <p>The server could not be reached. Nothing has been changed.</p>
+        <button type="button" class="btn btn-primary" @onclick="RetryAsync">Try again</button>
+    </div>
+}
+else
+{
+    <div class="session-message" role="status">Checking your session…</div>
+}
+
+@code {
+    private ElementReference mainContent;
+    private bool signingOut;
+    private bool signedOutByUser;
+    private string? signOutError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Session.Changed += HandleSessionChanged;
+        await Session.EnsureLoadedAsync();
+        RedirectIfAnonymous();
+    }
+
+    public void Dispose()
+    {
+        Session.Changed -= HandleSessionChanged;
+    }
+
+    private void HandleSessionChanged()
+    {
+        RedirectIfAnonymous();
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void RedirectIfAnonymous()
+    {
+        if (Session.Status != SessionStatus.Anonymous)
+        {
+            return;
+        }
+
+        string target = signedOutByUser
+            ? ReturnUrlPolicy.LoginRoute
+            : ReturnUrlPolicy.BuildLoginUrl(Navigation.ToBaseRelativePath(Navigation.Uri));
+        Navigation.NavigateTo(target, replace: true);
+    }
+
+    private async Task SignOutAsync()
+    {
+        signingOut = true;
+        signOutError = null;
+        signedOutByUser = true;
+        ApiResult result = await Session.SignOutAsync();
+        signingOut = false;
+        if (!result.IsSuccess)
+        {
+            signedOutByUser = false;
+            signOutError = "Sign-out failed. You are still signed in; try again.";
+        }
+    }
+
+    private async Task RetryAsync()
+    {
+        await Session.RefreshAsync();
+        RedirectIfAnonymous();
+    }
+
+    private async Task FocusMainContentAsync()
+    {
+        if (mainContent.Context is not null)
+        {
+            await mainContent.FocusAsync();
+        }
+    }
+}

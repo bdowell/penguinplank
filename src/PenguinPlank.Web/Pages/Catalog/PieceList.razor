@@ -1,0 +1,104 @@
+@page "/catalog/pieces"
+@implements IDisposable
+@inject ICatalogApiClient CatalogApi
+
+<CatalogPage Title="Pieces">
+    <form class="cp-toolbar" role="search" @onsubmit="SearchAsync">
+        <div class="cp-field">
+            <label for="piece-search">Search pieces</label>
+            <input id="piece-search" type="search" @bind="_search" @bind:event="oninput" />
+        </div>
+        <div class="cp-field">
+            <label for="piece-archived">
+                <input id="piece-archived" type="checkbox" @bind="_includeArchived" />
+                Include archived
+            </label>
+        </div>
+        <button type="submit" class="cp-button">Search</button>
+    </form>
+
+    <CatalogBanner Message="@_list.ErrorMessage" IsError="true" Tone="error">
+        <Actions>
+            <button type="button" class="cp-button secondary" @onclick="RetryAsync">Try again</button>
+        </Actions>
+    </CatalogBanner>
+
+    <div aria-busy="@(_list.IsLoading ? "true" : "false")">
+        @if (_list.IsLoading && !_list.HasLoaded)
+        {
+            <p role="status">Loading pieces…</p>
+        }
+        else if (_list.IsEmpty)
+        {
+            <p>No pieces found.</p>
+        }
+        else
+        {
+            <ul class="cp-cards" aria-label="Pieces">
+                @foreach (PieceResponse piece in _list.Items)
+                {
+                    string title = piece.PieceCode ?? "Piece without code";
+                    <li>
+                        <article class="cp-card" aria-labelledby="piece-@piece.PieceId">
+                            <h2 id="piece-@piece.PieceId">@title</h2>
+                            <dl>
+                                <dt>Status</dt>
+                                <dd>@(piece.Status ?? "None")</dd>
+                                <dt>Publication</dt>
+                                <dd>@piece.PublicationState</dd>
+                                <dt>Record</dt>
+                                <dd>@(piece.IsActive ? "Active" : "Archived")</dd>
+                            </dl>
+                            <a class="cp-button" href="catalog/pieces/@piece.PieceId" aria-label="View piece @title">View</a>
+                        </article>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+    <CatalogPager Label="Pieces" PageNumber="_list.PageNumber" TotalCount="_list.TotalCount"
+                  HasPrevious="_list.HasPrevious" HasNext="_list.HasNext"
+                  OnPrevious="() => LoadPageAsync(_list.PageNumber - 1)" OnNext="() => LoadPageAsync(_list.PageNumber + 1)" />
+</CatalogPage>
+
+@code {
+    private readonly CancellationTokenSource _cts = new();
+    private readonly CatalogListModel<PieceResponse> _list = new();
+    private string? _search;
+    private string? _appliedSearch;
+    private bool _includeArchived;
+
+    protected override Task OnInitializedAsync() => LoadPageAsync(1);
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+
+    private Task SearchAsync()
+    {
+        _appliedSearch = _search;
+        return LoadPageAsync(1);
+    }
+
+    private Task RetryAsync() => LoadPageAsync(_list.PageNumber);
+
+    private async Task LoadPageAsync(int pageNumber)
+    {
+        try
+        {
+            await _list.LoadAsync(
+                (paging, ct) => CatalogApi.ListPiecesAsync(
+                    new PieceListQuery { Search = _appliedSearch, IncludeArchived = _includeArchived, Paging = paging },
+                    ct),
+                pageNumber,
+                _cts.Token);
+        }
+        catch (OperationCanceledException) when (_cts.IsCancellationRequested)
+        {
+            // The page was left; nothing to show.
+        }
+    }
+}

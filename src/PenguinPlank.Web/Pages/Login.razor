@@ -1,0 +1,88 @@
+@page "/login"
+@layout LoginLayout
+@inject AuthSession Session
+@inject NavigationManager Navigation
+
+<PageTitle>Sign in - Penguin Plank</PageTitle>
+
+<h1>Sign in</h1>
+
+<form @onsubmit="SubmitAsync" aria-busy="@(isSubmitting ? "true" : "false")">
+    @if (errorMessage is not null)
+    {
+        <div id="login-error" class="alert alert-danger" role="alert">@errorMessage</div>
+    }
+
+    <div class="mb-3">
+        <label for="login-email" class="form-label">Email</label>
+        <input id="login-email"
+               name="email"
+               type="email"
+               class="form-control"
+               autocomplete="username"
+               required
+               aria-describedby="@(errorMessage is null ? null : "login-error")"
+               @bind="email"
+               @bind:event="oninput" />
+    </div>
+
+    <div class="mb-3">
+        <label for="login-password" class="form-label">Password</label>
+        <input id="login-password"
+               name="password"
+               type="password"
+               class="form-control"
+               autocomplete="current-password"
+               required
+               aria-describedby="@(errorMessage is null ? null : "login-error")"
+               @bind="password"
+               @bind:event="oninput" />
+    </div>
+
+    <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+        @(isSubmitting ? "Signing in…" : "Sign in")
+    </button>
+</form>
+
+@code {
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private string? errorMessage;
+    private bool isSubmitting;
+
+    /// <summary>Gets or sets the location to open after sign-in; validated before use.</summary>
+    [SupplyParameterFromQuery(Name = "returnUrl")]
+    public string? ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Session.EnsureLoadedAsync();
+        if (Session.Status == SessionStatus.Authenticated)
+        {
+            NavigateToReturnUrl();
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        isSubmitting = true;
+        errorMessage = null;
+        SignInOutcome outcome = await Session.SignInAsync(email, password);
+        isSubmitting = false;
+
+        if (outcome.Succeeded)
+        {
+            password = string.Empty;
+            NavigateToReturnUrl();
+            return;
+        }
+
+        password = string.Empty;
+        errorMessage = outcome.Message;
+    }
+
+    private void NavigateToReturnUrl()
+    {
+        Navigation.NavigateTo(ReturnUrlPolicy.Resolve(ReturnUrl), replace: true);
+    }
+}

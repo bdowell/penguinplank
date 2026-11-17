@@ -1,0 +1,17 @@
+@inject AuthSession Session
+
+@if (Session.IsOwner)
+{
+    @ChildContent
+}
+else
+{
+    <h1>Owner access required</h1>
+    <p role="alert">Only the owner can open this area.</p>
+}
+
+@code {
+    /// <summary>Gets or sets the content shown to the owner.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

@@ -92,7 +92,8 @@ public static class MediaEndpoints
                 $"{RoutePrefix}/media/{response.MediaAssetId}",
                 response);
         })
-        .DisableAntiforgery();
+        .DisableAntiforgery()
+        .RequireRateLimiting(PenguinPlank.Api.Composition.RateLimitingOptions.CostlyPolicyName);
     }
 
     private static void MapDownload(RouteGroupBuilder media)

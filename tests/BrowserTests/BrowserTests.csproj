@@ -9,6 +9,12 @@
     client (coding-standards §7). The project file name is BrowserTests.csproj,
     which the CI pipeline discovers by name.
 
+    The tests drive a real Chromium against the published Blazor WebAssembly client served
+    same-origin with the real API, which runs against a real isolated SQL Server database built
+    from the actual migrations (Hosting/ folder). Playwright's browser binaries are not part of
+    the NuGet package: the build emits bin/<config>/<tfm>/playwright.ps1, and
+    `pwsh playwright.ps1 install chromium` downloads the browser (CI does this before the run).
+
     CA1707 is suppressed for the test assembly: the mandated test naming
     convention is Method_Scenario_ExpectedBehavior (coding-standards §4), which
     intentionally uses underscores.
@@ -21,7 +27,14 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <!-- In-process API host (same pattern as IntegrationTests' AcceptanceApiFactory). Pinned to the 10.0.x servicing patch of the other Microsoft.* references. -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <!-- Browser automation, pinned. The browser binaries are installed separately (see the note above). -->
+    <PackageReference Include="Microsoft.Playwright" Version="1.59.0" />
+    <!-- Security pin for the SqlClient transitive dependency; see PenguinPlank.Infrastructure.csproj. -->
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
   </ItemGroup>
@@ -31,6 +44,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\PenguinPlank.Api\PenguinPlank.Api.csproj" />
+    <ProjectReference Include="..\..\src\PenguinPlank.Infrastructure\PenguinPlank.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\PenguinPlank.Web\PenguinPlank.Web.csproj" />
     <ProjectReference Include="..\..\src\PenguinPlank.Contracts\PenguinPlank.Contracts.csproj" />
   </ItemGroup>

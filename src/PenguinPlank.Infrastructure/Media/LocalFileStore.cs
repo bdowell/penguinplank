@@ -43,7 +43,7 @@ namespace PenguinPlank.Infrastructure.Media;
 /// requirement A2 Â§5.14).
 /// </para>
 /// </remarks>
-public sealed class LocalFileStore : IFileStore
+public sealed class LocalFileStore : IFileStore, IStoredFileKeyEnumerator
 {
     private readonly string _rootPath;
     private readonly MediaSizeLimits _sizeLimits;
@@ -169,6 +169,25 @@ public sealed class LocalFileStore : IFileStore
 
         // Deleting an already-absent file is a success (idempotent).
         return Task.FromResult(Result.Success());
+    }
+
+    /// <inheritdoc />
+    public Task<IReadOnlyList<string>> ListStoredKeysAsync(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        // Files live directly under the root; a root that was never written to holds no files.
+        if (!Directory.Exists(_rootPath))
+        {
+            return Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>());
+        }
+
+        string[] keys = Directory
+            .EnumerateFiles(_rootPath)
+            .Select(path => Path.GetFileName(path))
+            .ToArray();
+
+        return Task.FromResult<IReadOnlyList<string>>(keys);
     }
 
     private static async Task<int> ReadLeadingBytesAsync(Stream content, byte[] buffer, CancellationToken cancellationToken)

@@ -1,0 +1,19 @@
+<PageTitle>@Title</PageTitle>
+
+<section class="catalog-page" aria-labelledby="catalog-heading">
+    <nav class="catalog-tabs" aria-label="Catalog sections">
+        <a href="catalog/products">Products</a>
+        <a href="catalog/variants">Variants</a>
+        <a href="catalog/pieces">Pieces</a>
+    </nav>
+    <h1 id="catalog-heading" tabindex="-1">@Title</h1>
+    @ChildContent
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

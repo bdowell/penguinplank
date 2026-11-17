@@ -1,0 +1,103 @@
+@page "/catalog/variants"
+@implements IDisposable
+@inject ICatalogApiClient CatalogApi
+
+<CatalogPage Title="Variants">
+    <form class="cp-toolbar" role="search" @onsubmit="SearchAsync">
+        <div class="cp-field">
+            <label for="variant-search">Search variants</label>
+            <input id="variant-search" type="search" @bind="_search" @bind:event="oninput" />
+        </div>
+        <div class="cp-field">
+            <label for="variant-archived">
+                <input id="variant-archived" type="checkbox" @bind="_includeArchived" />
+                Include archived
+            </label>
+        </div>
+        <button type="submit" class="cp-button">Search</button>
+    </form>
+
+    <CatalogBanner Message="@_list.ErrorMessage" IsError="true" Tone="error">
+        <Actions>
+            <button type="button" class="cp-button secondary" @onclick="RetryAsync">Try again</button>
+        </Actions>
+    </CatalogBanner>
+
+    <div aria-busy="@(_list.IsLoading ? "true" : "false")">
+        @if (_list.IsLoading && !_list.HasLoaded)
+        {
+            <p role="status">Loading variants…</p>
+        }
+        else if (_list.IsEmpty)
+        {
+            <p>No variants found.</p>
+        }
+        else
+        {
+            <ul class="cp-cards" aria-label="Variants">
+                @foreach (VariantResponse variant in _list.Items)
+                {
+                    <li>
+                        <article class="cp-card" aria-labelledby="variant-@variant.VariantId">
+                            <h2 id="variant-@variant.VariantId">@variant.Sku</h2>
+                            <dl>
+                                <dt>Tracking</dt>
+                                <dd>@variant.TrackingMode (@variant.UnitOfMeasure)</dd>
+                                <dt>Retail price</dt>
+                                <dd>@(variant.RetailPrice is { } price ? $"{price:0.00} {variant.Currency}" : "Not set")</dd>
+                                <dt>Status</dt>
+                                <dd>@(variant.IsActive ? "Active" : "Archived")</dd>
+                            </dl>
+                            <a class="cp-button" href="catalog/variants/@variant.VariantId" aria-label="Edit variant @variant.Sku">Edit</a>
+                        </article>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+    <CatalogPager Label="Variants" PageNumber="_list.PageNumber" TotalCount="_list.TotalCount"
+                  HasPrevious="_list.HasPrevious" HasNext="_list.HasNext"
+                  OnPrevious="() => LoadPageAsync(_list.PageNumber - 1)" OnNext="() => LoadPageAsync(_list.PageNumber + 1)" />
+</CatalogPage>
+
+@code {
+    private readonly CancellationTokenSource _cts = new();
+    private readonly CatalogListModel<VariantResponse> _list = new();
+    private string? _search;
+    private string? _appliedSearch;
+    private bool _includeArchived;
+
+    protected override Task OnInitializedAsync() => LoadPageAsync(1);
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+
+    private Task SearchAsync()
+    {
+        _appliedSearch = _search;
+        return LoadPageAsync(1);
+    }
+
+    private Task RetryAsync() => LoadPageAsync(_list.PageNumber);
+
+    private async Task LoadPageAsync(int pageNumber)
+    {
+        try
+        {
+            await _list.LoadAsync(
+                (paging, ct) => CatalogApi.ListVariantsAsync(
+                    new VariantListQuery { Search = _appliedSearch, IncludeArchived = _includeArchived, Paging = paging },
+                    ct),
+                pageNumber,
+                _cts.Token);
+        }
+        catch (OperationCanceledException) when (_cts.IsCancellationRequested)
+        {
+            // The page was left; nothing to show.
+        }
+    }
+}

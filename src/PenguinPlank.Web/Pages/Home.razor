@@ -1,7 +1,9 @@
 ﻿@page "/"
+@inject AuthSession Session
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Dashboard - Penguin Plank</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Dashboard</h1>
 
-Welcome to your new app.
+<p>Welcome, @Session.Actor?.Email.</p>
+<p>Use the menu to open Products &amp; Stock. Other areas arrive in later releases.</p>

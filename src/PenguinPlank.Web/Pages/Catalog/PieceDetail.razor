@@ -1,0 +1,99 @@
+@page "/catalog/pieces/{PieceId:guid}"
+@implements IDisposable
+@inject ICatalogApiClient CatalogApi
+
+<CatalogPage Title="@(_piece?.PieceCode ?? "Piece")">
+    <p><a href="catalog/pieces">Back to pieces</a></p>
+
+    @if (_loadError is not null)
+    {
+        <CatalogBanner Message="@CatalogMessages.DescribeLoad(_loadError)" IsError="true" Tone="error">
+            <Actions>
+                <button type="button" class="cp-button secondary" @onclick="LoadAsync">Try again</button>
+            </Actions>
+        </CatalogBanner>
+    }
+    else if (_piece is null)
+    {
+        <p role="status">Loading piece…</p>
+    }
+    else
+    {
+        <article class="cp-card" aria-label="Piece details">
+            <dl>
+                <dt>Piece code</dt>
+                <dd>@(_piece.PieceCode ?? "None")</dd>
+                <dt>Status</dt>
+                <dd>@(_piece.Status ?? "None")</dd>
+                <dt>Finish</dt>
+                <dd>@(_piece.Finish ?? "None")</dd>
+                <dt>Dimensions</dt>
+                <dd>@DescribeDimensions(_piece.Dimensions)</dd>
+                <dt>Production date</dt>
+                <dd>@(_piece.ProductionDate?.ToString("d") ?? "Not recorded")</dd>
+                <dt>Story</dt>
+                <dd>@(_piece.Story ?? "None")</dd>
+                <dt>Publication</dt>
+                <dd>@_piece.PublicationState</dd>
+                <dt>Record</dt>
+                <dd>@(_piece.IsActive ? "Active" : "Archived")</dd>
+            </dl>
+            <p class="cp-hint">Pieces are read-only here. A piece's details are set when it is created.</p>
+            <a href="catalog/variants/@_piece.VariantId">View the variant</a>
+        </article>
+    }
+</CatalogPage>
+
+@code {
+    private readonly CancellationTokenSource _cts = new();
+    private PieceResponse? _piece;
+    private ApiError? _loadError;
+
+    [Parameter]
+    public Guid PieceId { get; set; }
+
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+    }
+
+    private static string DescribeDimensions(DimensionsContract? dimensions)
+    {
+        if (dimensions is null)
+        {
+            return "Not recorded";
+        }
+
+        var parts = new List<string>();
+        AddPart(parts, "length", dimensions.Length);
+        AddPart(parts, "width", dimensions.Width);
+        AddPart(parts, "thickness", dimensions.Thickness);
+        AddPart(parts, "diameter", dimensions.Diameter);
+        return parts.Count == 0 ? "Not recorded" : $"{string.Join(", ", parts)} ({dimensions.Unit})";
+    }
+
+    private static void AddPart(List<string> parts, string name, decimal? value)
+    {
+        if (value is { } measured)
+        {
+            parts.Add($"{name} {measured}");
+        }
+    }
+
+    private async Task LoadAsync()
+    {
+        try
+        {
+            ApiResult<PieceResponse> result = await CatalogApi.GetPieceAsync(PieceId, _cts.Token);
+            _loadError = result.Error;
+            _piece = result.Value ?? _piece;
+        }
+        catch (OperationCanceledException) when (_cts.IsCancellationRequested)
+        {
+            // The page was left; nothing to show.
+        }
+    }
+}

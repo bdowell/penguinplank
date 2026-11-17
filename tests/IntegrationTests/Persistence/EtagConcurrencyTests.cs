@@ -73,6 +73,52 @@ public sealed class EtagConcurrencyTests
     }
 
     [Fact]
+    public async Task ExecuteAsync_StaleRowVersion_LeavesContextUsableForLaterSaveAsync()
+    {
+        // Regression: the stale edit's pending changes stayed tracked, so the next SaveChanges on the
+        // same scoped context (the idempotency pipeline recording the outcome) retried the stale
+        // UPDATE, threw, and turned the 412 into a 500.
+        Guid productId = await InsertProductAsync("Original name");
+
+        byte[] staleRowVersion;
+        await using (PenguinPlankDbContext read = _fixture.CreateContext())
+        {
+            staleRowVersion = (await read.Products.AsNoTracking().SingleAsync(p => p.Id == productId)).RowVersion;
+        }
+
+        await using (PenguinPlankDbContext concurrent = _fixture.CreateContext())
+        {
+            Product tracked = await concurrent.Products.SingleAsync(p => p.Id == productId);
+            tracked.Name = "Winner's name";
+            await concurrent.SaveChangesAsync();
+        }
+
+        Guid laterProductId = Guid.NewGuid();
+        await using (PenguinPlankDbContext editContext = _fixture.CreateContext())
+        {
+            Product tracked = await editContext.Products.SingleAsync(p => p.Id == productId);
+            tracked.Name = "Loser's stale name";
+            Result result = await new EfConcurrentUpdateExecutor(editContext)
+                .ExecuteAsync(tracked, staleRowVersion, CancellationToken.None);
+            Assert.Equal(ErrorCode.StaleVersion, result.Error.Code);
+
+            // A later, unrelated write on the same context must succeed.
+            editContext.Products.Add(new Product
+            {
+                Id = laterProductId,
+                Name = "Later write",
+                PublicationState = PublicationState.Draft,
+                ActiveFlag = true,
+            });
+            await editContext.SaveChangesAsync();
+        }
+
+        await using PenguinPlankDbContext verify = _fixture.CreateContext();
+        Assert.Equal("Winner's name", (await verify.Products.SingleAsync(p => p.Id == productId)).Name);
+        Assert.True(await verify.Products.AnyAsync(p => p.Id == laterProductId));
+    }
+
+    [Fact]
     public async Task ExecuteAsync_CurrentRowVersion_SucceedsAndAppliesTheEditAsync()
     {
         Guid productId = await InsertProductAsync("Original name");

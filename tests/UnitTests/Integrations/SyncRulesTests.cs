@@ -21,6 +21,43 @@ public class SyncRulesTests
         Assert.Equal(outcome, CursorAdvancePolicy.Decide(stored, expected));
     }
 
+    private static readonly double[] s_expected = new[] { 2.0, 2.0, 4.0, 8.0, 10.0, 10.0 };
+
+    [Fact]
+    public void Schedule_ConfiguredOptions_IsBoundedCappedAndRespectsRateFloor()
+    {
+        var options = new RetryBackoffOptions(
+            MaxAttempts: 6,
+            InitialDelay: TimeSpan.FromSeconds(1),
+            MaxDelay: TimeSpan.FromSeconds(10),
+            JitterRatio: 0.5,
+            MinimumInterval: TimeSpan.FromSeconds(2));
+
+        var schedule = RetryBackoffPolicy.Schedule(options, _ => 1.0);
+
+        Assert.Equal(6, schedule.Count);
+        Assert.Equal(
+            s_expected,
+            schedule.Select(a => a.BaseDelay.TotalSeconds));
+        Assert.All(schedule, a => Assert.Equal(a.BaseDelay.TotalSeconds * 1.5, a.Delay.TotalSeconds, 6));
+    }
+
+    [Fact]
+    public void Schedule_ZeroAttempts_ReturnsEmpty()
+    {
+        var options = new RetryBackoffOptions(0, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2), 0.2, TimeSpan.Zero);
+
+        Assert.Empty(RetryBackoffPolicy.Schedule(options, _ => 0.5));
+    }
+
+    [Fact]
+    public void Schedule_InvalidJitterRatio_Throws()
+    {
+        var options = new RetryBackoffOptions(1, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2), 1.5, TimeSpan.Zero);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => RetryBackoffPolicy.Schedule(options, _ => 0.5));
+    }
+
     [Theory]
     [InlineData(true, false, true)]
     [InlineData(true, true, false)]

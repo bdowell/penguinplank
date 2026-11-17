@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PenguinPlank.Application.Abstractions.Concurrency;
 using PenguinPlank.Domain.Common;
 
@@ -78,12 +79,30 @@ public sealed class EfConcurrentUpdateExecutor : IConcurrentUpdateExecutor
         catch (DbUpdateConcurrencyException)
         {
             // The row moved on since the client read it: zero rows matched the If-Match version.
+            // The save's transaction rolled back, so discard its pending changes. Otherwise the
+            // next SaveChanges on this scoped context (for example the idempotency pipeline
+            // recording the outcome) would retry the stale UPDATE and fail with a 500.
+            DiscardPendingChanges();
+
             // Translate this expected concurrency conflict to a stable StaleVersion failure
             // (-> HTTP 412 refresh prompt) rather than overwriting the newer state.
             return Result.Failure(
                 ErrorCode.StaleVersion,
                 "The record was changed by someone else since you loaded it. "
                     + "Refresh to see the latest version and reapply your changes.");
+        }
+    }
+
+    private void DiscardPendingChanges()
+    {
+        List<EntityEntry> pending = _dbContext.ChangeTracker
+            .Entries()
+            .Where(entry => entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
+            .ToList();
+
+        foreach (EntityEntry entry in pending)
+        {
+            entry.State = EntityState.Detached;
         }
     }
 }
